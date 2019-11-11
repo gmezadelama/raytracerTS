@@ -1,3 +1,5 @@
+import Matrix from '../features/matrices';
+
 type wRange = 0 | 1;
 
 export interface Tuple {
@@ -96,3 +98,10 @@ export const hadamardProduct = (a: Tuple, b: Tuple):Tuple => ({
     z: a.z * b.z,
     w: (a.w * b.w) as wRange
 });
+
+export const matrixToTuple = (m: Matrix):Tuple => ({
+    x: m.get(0, 0),
+    y: m.get(1, 0),
+    z: m.get(2, 0),
+    w: (m.get(3, 0)) as wRange
+})

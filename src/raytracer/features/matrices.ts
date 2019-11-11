@@ -22,11 +22,19 @@ export default class Matrix {
         }
     }
 
+    public setMatrix = (m: number[][]) => {
+        this.rows = m.length;
+        this.columns = m[0].length;
+        this.matrix = m;
+    }
+
     public print = () => {
         for (let i = 0; i < this.rows; i++) {
+            let row = '|';
             for (let j = 0; j < this.columns; j++) {
-                console.log(this.matrix[i][j]);
+                row += ` ${this.matrix[i][j]} |`;
             }
+            console.log(row);
         }
     }
 
@@ -93,8 +101,8 @@ export const multiply = (a: Matrix, b: Matrix):Matrix | undefined => {
     }
 
     let m = new Matrix(a.getNumRows(), b.getNumCols());
-    for(let i = 0; i < m.getNumCols(); i++) {
-        for(let j = 0; j < m.getNumRows(); j++) {
+    for(let i = 0; i < m.getNumRows(); i++) {
+        for(let j = 0; j < m.getNumCols(); j++) {
             m.set(i, j, dot(a.getRow(i), b.getColumn(j)));
         }
     }
@@ -163,3 +171,15 @@ export const inverse = (m: Matrix):Matrix | undefined => {
     }
 }
 
+export const tupleToMatrix = (t: Tuple):Matrix => {
+    let m = new Matrix(0, 0);
+    m.setMatrix(
+        [
+            [ t.x ],
+            [ t.y ],
+            [ t.z ],
+            [ t.w ]
+        ]
+    );
+    return m;
+}

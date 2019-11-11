@@ -342,3 +342,65 @@ describe('Multiplying product by its inverse', () => {
         expect(equal(aProd.get(3, 3), a.get(3, 3))).toBeTruthy();
     });
 });
+
+describe('Testing setMatrix', () => {
+    let m = new Matrix(0, 0);
+    beforeAll(() => {
+        m.setMatrix(
+            [
+                [1, 2, 3, 4],
+                [5, 6, 7, 8],
+                [9, 10, 11, 12],
+                [13, 14, 15, 16]
+            ]
+        );
+    });
+    it('m[0,0] equals to 1', () => {
+        expect(m.get(0, 0)).toBe(1);
+    });
+    it('m[0,1] equals to 2', () => {
+        expect(m.get(0, 1)).toBe(2);
+    });
+    it('m[0,2] equals to 3', () => {
+        expect(m.get(0, 2)).toBe(3);
+    });
+    it('m[0,3] equals to 4', () => {
+        expect(m.get(0, 3)).toBe(4);
+    });
+    it('m[1,0] equals to 5', () => {
+        expect(m.get(1, 0)).toBe(5);
+    });
+    it('m[1,1] equals to 6', () => {
+        expect(m.get(1, 1)).toBe(6);
+    });
+    it('m[1,2] equals to 7', () => {
+        expect(m.get(1, 2)).toBe(7);
+    });
+    it('m[1,3] equals to 8', () => {
+        expect(m.get(1, 3)).toBe(8);
+    });
+    it('m[2,0] equals to 9', () => {
+        expect(m.get(2, 0)).toBe(9);
+    });
+    it('m[2,1] equals to 10', () => {
+        expect(m.get(2, 1)).toBe(10);
+    });
+    it('m[2,2] equals to 11', () => {
+        expect(m.get(2, 2)).toBe(11);
+    });
+    it('m[2,3] equals to 12', () => {
+        expect(m.get(2, 3)).toBe(12);
+    });
+    it('m[3,0] equals to 13', () => {
+        expect(m.get(3, 0)).toBe(13);
+    });
+    it('m[3,1] equals to 14', () => {
+        expect(m.get(3, 1)).toBe(14);
+    });
+    it('m[3,2] equals to 15', () => {
+        expect(m.get(3, 2)).toBe(15);
+    });
+    it('m[3,3] equals to 16', () => {
+        expect(m.get(3, 3)).toBe(16);
+    });
+});
