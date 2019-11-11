@@ -1,10 +1,10 @@
 {
   "name": "raytracerjs",
   "version": "1.0.0",
-  "description": "simple js game boilerplate",
+  "description": "raytracer challenge - typescript",
   "main": "index.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "start": "webpack-dev-server --mode development --open",
     "build": "webpack --mode production"
   },
@@ -13,12 +13,15 @@
   "devDependencies": {
     "@babel/core": "^7.5.5",
     "@babel/preset-env": "^7.5.5",
+    "@types/jest": "^24.0.22",
     "autoprefixer": "^9.6.1",
     "babel-loader": "^8.0.6",
     "cssnano": "^4.1.10",
     "file-loader": "^4.2.0",
     "html-webpack-plugin": "^3.2.0",
+    "jest": "^24.9.0",
     "mini-css-extract-plugin": "^0.8.0",
+    "ts-jest": "^24.1.0",
     "typescript": "^3.7.2",
     "webpack": "^4.39.2",
     "webpack-cli": "^3.3.7",

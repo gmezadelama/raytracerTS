@@ -9,16 +9,24 @@ export default class Matrix {
 
     public getNumRows = ():number => this.rows;
 
-    constructor(columns: number, rows: number) {
+    constructor(rows: number, columns: number) {
         this.matrix = [];
         this.columns = columns;
         this.rows = rows;
-        for(let i = 0; i < columns; i++) {
+        for(let i = 0; i < rows; i++) {
             let temp: number[] = [];
-            for(let j = 0; j < rows; j++) {
+            for(let j = 0; j < columns; j++) {
                 temp.push(0);
             }
             this.matrix.push(temp);
+        }
+    }
+
+    public print = () => {
+        for (let i = 0; i < this.rows; i++) {
+            for (let j = 0; j < this.columns; j++) {
+                console.log(this.matrix[i][j]);
+            }
         }
     }
 
@@ -54,7 +62,7 @@ export default class Matrix {
     }
 }
 
-const dot = (a: number[], b: number[]):number | undefined {
+const dot = (a: number[], b: number[]):number | undefined => {
     if (a.length !== b.length) {
         return undefined;
     }
@@ -115,5 +123,43 @@ export const subMatrix = (m: Matrix, x: number, y: number):Matrix => {
     return s;
 }
 
+export const cofactor = (m: Matrix, i: number, j: number) => ((i + j) % 2 === 0 ? 1 : -1) * determinant(subMatrix(m, i, j));
 
+export const determinant = (m: Matrix):number | undefined => {
+    if (m.getNumCols() !== m.getNumRows()) {
+        return undefined;
+    }
+    let size = m.getNumCols();
+    let det = 0;
+    if (size === 2) {
+        det = m.get(0, 0) * m.get(1, 1) - m.get(0, 1) * m.get(1, 0);
+    } else {
+        for (let j = 0; j < size; j++) {
+            det += m.get(0, j) * cofactor(m, 0, j);
+        }
+    }
+    return det;
+}
+
+export const inverse = (m: Matrix):Matrix | undefined => {
+    if (m.getNumCols() !== m.getNumRows()) {
+        return undefined;
+    }
+    try {
+        // matrix of cofactors
+        let c = new Matrix(m.getNumRows(), m.getNumCols());
+        // inverted matrix
+        let m2 = new Matrix(m.getNumRows(), m.getNumCols());
+        let d = determinant(m);
+        for (let i = 0; i < m.getNumRows(); i++) {
+            for (let j = 0; j < m.getNumCols(); j++) {
+                c.set(i, j, cofactor(m, i, j));
+                m2.set(j, i, c.get(i, j) / d);
+            }
+        }
+        return m2;
+    } catch(e) {
+        return undefined;
+    }
+}
 
