@@ -1,4 +1,5 @@
 import { Tuple } from '../math/tuple';
+import * as Transformations from './transformations';
 
 export default class Matrix {
     private matrix:number[][] = [];
@@ -27,6 +28,8 @@ export default class Matrix {
         this.columns = m[0].length;
         this.matrix = m;
     }
+
+    public getMatrixValues = () => this.matrix;
 
     public print = () => {
         for (let i = 0; i < this.rows; i++) {
@@ -68,6 +71,49 @@ export default class Matrix {
         }
         return t;
     }
+
+    public translation = (x: number, y: number, z: number):Matrix => {
+        let transfMat = Transformations.translation(x, y, z);
+        let m = multiply(transfMat, this);
+        // this.setMatrix(m.getMatrixValues()); todo: ?
+        return m;
+    }
+
+    public scaling = (x: number, y: number, z: number):Matrix => {
+        let transfMat = Transformations.scaling(x, y, z);
+        let m = multiply(transfMat, this);
+        // this.setMatrix(m.getMatrixValues()); todo: ?
+        return m;
+    }
+
+    public rotateAroundX = (radians: number):Matrix => {
+        let transfMat = Transformations.rotateAroundX(radians);
+        let m = multiply(transfMat, this);
+        // this.setMatrix(m.getMatrixValues()); todo: ?
+        return m;
+    }
+
+    public rotateAroundY = (radians: number):Matrix => {
+        let transfMat = Transformations.rotateAroundY(radians);
+        let m = multiply(transfMat, this);
+        // this.setMatrix(m.getMatrixValues()); todo: ?
+        return m;
+    }
+
+    public rotateAroundZ = (radians: number):Matrix => {
+        let transfMat = Transformations.rotateAroundZ(radians);
+        let m = multiply(transfMat, this);
+        // this.setMatrix(m.getMatrixValues()); todo: ?
+        return m;
+    }
+
+    public shearing = (xy: number, xz: number, yx: number, yz: number, zx: number, zy: number):Matrix => {
+        let transfMat = Transformations.shearing(xy, xz, yx, yz, zx, zy);
+        let m = multiply(transfMat, this);
+        // this.setMatrix(m.getMatrixValues()); todo: ?
+        return m;
+    }
+
 }
 
 const dot = (a: number[], b: number[]):number | undefined => {

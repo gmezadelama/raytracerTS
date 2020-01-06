@@ -15,6 +15,9 @@ export const vector = (x: number, y: number, z: number):Tuple => tuple(x, y, z, 
 
 export const color = (x: number, y: number, z: number):Tuple => tuple(x, y, z, 0);
 
+export type Point = Tuple;
+export type Vector = Tuple;
+
 const tuple = (x: number, y: number, z: number, w: wRange):Tuple => ({
     x: x,
     y: y,

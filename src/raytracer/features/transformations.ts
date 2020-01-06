@@ -79,13 +79,32 @@ export const shearing = (xy: number, xz: number, yx: number, yz: number, zx: num
     return m;
 }
 
-export const multiplyTranslationPoint = (m: Matrix, point: Tuple):Tuple | undefined => {
+export const multiplyTransformationMatrixPoint = (m: Matrix, point: Tuple):Tuple | undefined => {
     let pm = tupleToMatrix(point);
     let prod = multiplyMatrices(m, pm);
     if (!prod) return undefined;
     return matrixToTuple(prod);
 }
 
-export const multiplyInvTranslationPoint = (m: Matrix, point: Tuple):Tuple | undefined => {
-    return multiplyTranslationPoint(inverse(m), point);
+export const multiplyInvTransformationMatrixPoint = (m: Matrix, point: Tuple):Tuple | undefined => {
+    return multiplyTransformationMatrixPoint(inverse(m), point);
+}
+
+export const multiplyTranslationPoint =
+    (m: Matrix, point: Tuple):Tuple | undefined => multiplyTransformationMatrixPoint(m, point);
+
+export const multiplyScalingPoint =
+    (m: Matrix, point: Tuple):Tuple | undefined => multiplyTransformationMatrixPoint(m, point);
+
+export const multiplyRotationPoint =
+    (m: Matrix, point: Tuple):Tuple | undefined => multiplyTransformationMatrixPoint(m, point);
+
+export const multiplyShearingPoint =
+    (m: Matrix, point: Tuple):Tuple | undefined => multiplyTransformationMatrixPoint(m, point);
+
+export const applyChainedTransformations = (matrices: Matrix[], point: Tuple):Tuple | undefined => {
+    if (!matrices || matrices.length === 0) return undefined;
+    return matrices.reverse().reduce((acc: Tuple, m: Matrix) => (
+        multiplyTranslationPoint(m, acc)
+    ), point);
 }
