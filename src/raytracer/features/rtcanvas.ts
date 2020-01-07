@@ -1,16 +1,16 @@
-import { Tuple, color } from '../math/tuple';
+import { Tuple, PixelColor, createPixelColor } from '../math/tuple';
 
 export default class RTCanvas {
     private height: number;
     private width: number;
-    private matrix: Tuple[][] = [];
+    private matrix: PixelColor[][] = [];
     public constructor(width: number, height: number) {
         this.height = height;
         this.width = width;
         for(let i = 0; i < width; i++) {
-            let temp: Tuple[] = [];
+            let temp: PixelColor[] = [];
             for(let j = 0; j < height; j++) {
-                temp.push(color(0, 0, 0));
+                temp.push(createPixelColor(0, 0, 0));
             }
             this.matrix.push(temp);
         }

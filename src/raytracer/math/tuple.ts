@@ -9,14 +9,15 @@ export interface Tuple {
     w: wRange;
 }
 
-export const point = (x: number, y: number, z: number):Tuple => tuple(x, y, z, 1);
+export const createPoint = (x: number, y: number, z: number):Tuple => tuple(x, y, z, 1);
 
-export const vector = (x: number, y: number, z: number):Tuple => tuple(x, y, z, 0);
+export const createVector = (x: number, y: number, z: number):Tuple => tuple(x, y, z, 0);
 
-export const color = (x: number, y: number, z: number):Tuple => tuple(x, y, z, 0);
+export const createPixelColor = (x: number, y: number, z: number):Tuple => tuple(x, y, z, 0);
 
 export type Point = Tuple;
 export type Vector = Tuple;
+export type PixelColor = Tuple;
 
 const tuple = (x: number, y: number, z: number, w: wRange):Tuple => ({
     x: x,

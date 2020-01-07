@@ -1,4 +1,4 @@
-import { Point, point, subtract, Vector, vector, dot, multiplyScalar } from '../math/tuple';
+import { Point, createPoint, subtract, Vector, createVector, dot, multiplyScalar } from '../math/tuple';
 import Ray from '../features/ray';
 
 export default class Sphere {
@@ -7,7 +7,7 @@ export default class Sphere {
     private id: number;
     constructor() {
         this.id = (new Date()).getTime();
-        this.origin = point(0, 0, 0);
+        this.origin = createPoint(0, 0, 0);
         this.radius = 1;
     }
 

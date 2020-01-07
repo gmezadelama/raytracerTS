@@ -1,4 +1,4 @@
-import { Point, Vector, point, vector } from '../math/tuple';
+import { Point, Vector, createPoint, createVector } from '../math/tuple';
 import Ray from './ray';
 import Sphere from '../geometry/sphere';
 
@@ -6,8 +6,8 @@ describe('ray', () => {
     let r: Ray;
     beforeAll(() => {
         r = new Ray(
-            point(2, 3, 4),
-            vector(1, 0, 0)
+            createPoint(2, 3, 4),
+            createVector(1, 0, 0)
         );
     });
     it('should have right values at 0', () => {
@@ -47,8 +47,8 @@ describe('intersection with a sphere', () => {
     });
     it('should intersect two points', () => {
         let r = new Ray(
-            point(0, 0, -5),
-            vector(0, 0, 1)
+            createPoint(0, 0, -5),
+            createVector(0, 0, 1)
         );
         let xs = s.intersect(r);
         expect(xs.length).toBe(2);
@@ -57,8 +57,8 @@ describe('intersection with a sphere', () => {
     });
     it('should intersect one point', () => {
         let r = new Ray(
-            point(0, 1, -5),
-            vector(0, 0, 1)
+            createPoint(0, 1, -5),
+            createVector(0, 0, 1)
         );
         let xs = s.intersect(r);
         expect(xs.length).toBe(2);
@@ -67,16 +67,16 @@ describe('intersection with a sphere', () => {
     });
     it('should miss the sphere', () => {
         let r = new Ray(
-            point(0, 2, -5),
-            vector(0, 0, 1)
+            createPoint(0, 2, -5),
+            createVector(0, 0, 1)
         );
         let xs = s.intersect(r);
         expect(xs.length).toBe(0);
     });
     test('ray originate inside a sphere', () => {
         let r = new Ray(
-            point(0, 0, 0),
-            vector(0, 0, 1)
+            createPoint(0, 0, 0),
+            createVector(0, 0, 1)
         );
         let xs = s.intersect(r);
         expect(xs.length).toBe(2);
@@ -85,8 +85,8 @@ describe('intersection with a sphere', () => {
     });
     test('sphere behind a ray', () => {
         let r = new Ray(
-            point(0, 0, 5),
-            vector(0, 0, 1)
+            createPoint(0, 0, 5),
+            createVector(0, 0, 1)
         );
         let xs = s.intersect(r);
         expect(xs.length).toBe(2);

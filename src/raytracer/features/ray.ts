@@ -1,4 +1,4 @@
-import { Point, Vector, point, vector, multiplyScalar, add } from '../math/tuple';
+import { Point, Vector, createPoint, createVector, multiplyScalar, add } from '../math/tuple';
 
 export default class Ray {
     private origin: Point;

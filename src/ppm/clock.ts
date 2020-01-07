@@ -1,10 +1,10 @@
 import {
     Point,
     add,
-    point,
-    vector,
+    createPoint,
+    createVector,
     normalize,
-    color,
+    createPixelColor,
     multiplyScalar
 } from '../raytracer/math/tuple';
 import * as Transformations from '../raytracer/features/transformations';
@@ -19,12 +19,12 @@ export function addXHours (time: Point, h: number): Point {
 }
 
 export function getClockHoursPositionPPM(): string {
-    let origin: Point = point(0, 0, 0);
+    let origin: Point = createPoint(0, 0, 0);
     let canvasWidth = 600;
     let canvasHeight = 600;
     let margin = 50; // space between clock radio and canvas border
     let clockRadio = Math.min(canvasHeight, canvasWidth) / 2 - margin;
-    const TwelveOClock: Point = point (0, 0, clockRadio);
+    const TwelveOClock: Point = createPoint (0, 0, clockRadio);
     let points : Point[] = [];
     for (let i = 0; i < 12; i++) {
         points.push(addXHours(TwelveOClock, i));
@@ -33,7 +33,7 @@ export function getClockHoursPositionPPM(): string {
     for(const p of points) {
         let xCoord = canvasWidth / 2 + p.x;
         let yCoord = canvasHeight / 2 - p.z;
-        c.writePixel(Math.round(xCoord), Math.round(yCoord), color(1, 0.8, 0.6));
+        c.writePixel(Math.round(xCoord), Math.round(yCoord), createPixelColor(1, 0.8, 0.6));
     }
     return c.convertToPPM();
 }
