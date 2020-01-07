@@ -2,6 +2,7 @@ import * as Transformations from './transformations';
 import Matrix, { inverse, Identity } from './matrices';
 import { Point, Vector, point, vector } from '../math/tuple';
 import { equal } from '../math/operations';
+import { addXHours } from '../../ppm/clock';
 
 describe('shearing', () => {
     test('moves x in proportion of y', () => {
@@ -236,12 +237,6 @@ describe('chaining transformations', () => {
         // const ClockCenter: Point = point(0, 0, 0);
         const TwelveOClock: Point = point (0, 0, 1);
         const ThreeOClock: Point = point (1, 0, 0);
-
-        const addXHours = (time: Point, h: number): Point => {
-            const hourRotation: number = 2 * Math.PI  / 12;
-            let rotMat = Identity(4).rotateAroundY(h * hourRotation);
-            return Transformations.multiplyRotationPoint(rotMat, time);
-        }
 
         let newTime: Point = addXHours(TwelveOClock, 3);
         expect(equal(newTime.x, ThreeOClock.x)).toBeTruthy();
