@@ -32,7 +32,7 @@ export default class RTCanvas {
             let line = '';
             for(let i = 0; i < this.width; i++) {
                 line += `${Math.round(this.matrix[i][j].x * 255)} ${Math.round(this.matrix[i][j].y * 255)} ${Math.round(this.matrix[i][j].z * 255)}`;
-                if (j < this.width - 1) {
+                if (i < this.width - 1) {
                     line += ' ';
                 }
             }

@@ -20,9 +20,9 @@ export function addXHours (time: Point, h: number): Point {
 
 export function getClockHoursPositionPPM(): string {
     let origin: Point = point(0, 0, 0);
-    let canvasWidth = 900;
-    let canvasHeight = 550;
-    let margin = 20; // space between clock radio and canvas border
+    let canvasWidth = 600;
+    let canvasHeight = 600;
+    let margin = 50; // space between clock radio and canvas border
     let clockRadio = Math.min(canvasHeight, canvasWidth) / 2 - margin;
     const TwelveOClock: Point = point (0, 0, clockRadio);
     let points : Point[] = [];
