@@ -155,7 +155,7 @@ export const multiply = (a: Matrix, b: Matrix):Matrix | undefined => {
     return m;
 }
 
-export const Identity = (dim: number):Matrix => {
+export const Identity = (dim: number = 4):Matrix => {
     let id = new Matrix(dim, dim);
     for(let i = 0; i < dim; i++) {
         id.set(i, i, 1);

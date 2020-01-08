@@ -108,3 +108,9 @@ export const applyChainedTransformations = (matrices: Matrix[], point: Tuple):Tu
         multiplyTranslationPoint(m, acc)
     ), point);
 }
+
+export enum TransformationType {
+    Translation = 'translation',
+    Scaling = 'scaling',
+    Rotation = 'rotation'
+}
