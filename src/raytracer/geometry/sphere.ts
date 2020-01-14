@@ -1,4 +1,4 @@
-import { Point, createPoint, subtract, Vector, createVector, dot, multiplyScalar } from '../math/tuple';
+import { Point, createPoint, subtract, Vector, createVector, dot, multiplyScalar, normalize } from '../math/tuple';
 import Ray from '../features/ray';
 import Intersection from '../features/intersection';
 import Shape from './shape';
@@ -33,5 +33,12 @@ export default class Sphere extends Shape {
                 new Intersection((-b  + sqrtDiscr) / (2 * a), this)
             ];
         }
+    }
+
+    public normalAt = (p: Point): Vector => {
+        // Since it's a unit sphere the vector will
+        // be normalized by default but the calculation
+        // is still indicated.
+        return normalize(subtract(p, this.origin));
     }
 }

@@ -32,10 +32,10 @@ export function castRayToRedSphere(): string {
     // );
 
     sphere.setTransform(
-        Matrix
-        .Identity()
-        .scaling(0.5, 1, 1)
-        .shearing(1, 0, 0, 0, 0, 0)
+        Transformations.getChainedTransformations(
+            Transformations.shearing(1, 0, 0, 0, 0, 0),
+            Transformations.scaling(0.5, 1, 1)
+        ) 
     );
 
     // scanning each row of pixel in the canvas

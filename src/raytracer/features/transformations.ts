@@ -109,6 +109,12 @@ const applyChainedTransformations = (matrices: Matrix[], point: Tuple):Tuple | u
     ), point);
 }
 
+const getChainedTransformations = (...matrices: Matrix[]): Matrix => {
+    return matrices.reverse().reduce((acc: Matrix, m: Matrix) => (
+        Matrix.multiply(m, acc)
+    ), Matrix.Identity());
+}
+
 export enum TransformationType {
     Translation = 'translation',
     Scaling = 'scaling',
@@ -128,7 +134,8 @@ const Transformations = {
     multiplyScalingPoint,
     multiplyRotationPoint,
     multiplyShearingPoint,
-    applyChainedTransformations
+    applyChainedTransformations,
+    getChainedTransformations
 };
 
 export default Transformations;
