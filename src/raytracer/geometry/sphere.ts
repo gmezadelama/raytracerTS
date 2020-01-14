@@ -2,7 +2,7 @@ import { Point, createPoint, subtract, Vector, createVector, dot, multiplyScalar
 import Ray from '../features/ray';
 import Intersection from '../features/intersection';
 import Shape from './shape';
-import { inverse } from '../math/matrices';
+import Matrix from '../math/matrices';
 
 export default class Sphere extends Shape {
     private origin: Point;
@@ -14,7 +14,7 @@ export default class Sphere extends Shape {
     }
 
     public intersect = (r: Ray): Intersection[] => {
-        let r2 = r.transformRay(inverse(this.getTransform()));
+        let r2 = r.transformRay(Matrix.inverse(this.getTransform()));
         const {
             origin: rayOrigin,
             direction: rayDirection

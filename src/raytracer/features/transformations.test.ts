@@ -1,5 +1,5 @@
-import * as Transformations from './transformations';
-import Matrix, { inverse, Identity } from '../math/matrices';
+import Transformations from './transformations';
+import Matrix from '../math/matrices';
 import { Point, Vector, createPoint, createVector } from '../math/tuple';
 import { equal } from '../math/operations';
 import { addXHours } from '../../ppm/clock';
@@ -67,7 +67,7 @@ describe('translation', () => {
     });
     test('multiplying by the inverse of a translation matrix', () => {
         let transform: Matrix = Transformations.translation(5, -3, 2);
-        let inv: Matrix = inverse(transform);
+        let inv: Matrix = Matrix.inverse(transform);
         let p: Point = createPoint(-3, 4, 5);
         let newPoint: Point = Transformations.multiplyTranslationPoint(inv, p);
         expect(newPoint.x).toBe(-8);
@@ -107,7 +107,7 @@ describe('scaling', () => {
     });
     test('multiplying by the inverse of a scaling matrix', () => {
         let transform: Matrix = Transformations.scaling(2, 3, 4);
-        let inv: Matrix = inverse(transform);
+        let inv: Matrix = Matrix.inverse(transform);
         let v: Vector = createVector(-4, 6, 8);
         let newVector: Vector = Transformations.multiplyScalingPoint(inv, v);
         expect(newVector.x).toBe(-2);
@@ -145,7 +145,7 @@ describe('rotation', () => {
     test('the inverse of an x-rotation rotates in the opposite direction', () => {
         let p: Point = createPoint(0, 1, 0);
         let halfQuarter: Matrix = Transformations.rotateAroundX(Math.PI / 4);
-        let inv: Matrix = inverse(halfQuarter);
+        let inv: Matrix = Matrix.inverse(halfQuarter);
         let hqInvRotated = Transformations.multiplyRotationPoint(inv, p);
         expect(equal(hqInvRotated.x, 0)).toBeTruthy();
         expect(equal(hqInvRotated.y, Math.SQRT2 / 2)).toBeTruthy();
@@ -221,7 +221,7 @@ describe('chaining transformations', () => {
         expect(p4.w).toBe(1);
     });
     test('testing fluid API', () => {
-        let transform = Identity(4)
+        let transform = Matrix.Identity(4)
                         .rotateAroundX(Math.PI / 2)
                         .scaling(5, 5, 5)
                         .translation(10, 5, 7);

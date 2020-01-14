@@ -1,5 +1,5 @@
 
-import Matrix, { cofactor, determinant, inverse, multiply } from './matrices';
+import Matrix from './matrices';
 import { equal } from './operations';
 
 test('m[1][2] to be equal to 3', () => {
@@ -22,16 +22,16 @@ describe('M3x3', () => {
         m.set(2, 2, 4);
     });
     test('cofactor(0, 0) to be equal 56', () => {
-        expect(cofactor(m, 0, 0)).toBe(56);
+        expect(Matrix.cofactor(m, 0, 0)).toBe(56);
     });
     test('cofactor(0, 1) to be equal 12', () => {
-        expect(cofactor(m, 0, 1)).toBe(12);
+        expect(Matrix.cofactor(m, 0, 1)).toBe(12);
     });
     test('cofactor(0, 2) to be equal -46', () => {
-        expect(cofactor(m, 0, 2)).toBe(-46);
+        expect(Matrix.cofactor(m, 0, 2)).toBe(-46);
     });
     test('det|M3x3| to be equal to -196', () => {
-        expect(determinant(m)).toBe(-196);
+        expect(Matrix.determinant(m)).toBe(-196);
     });    
 });
 
@@ -56,19 +56,19 @@ describe('M4x4', () => {
         m.set(3, 3, -9);
     });
     test('cofactor(0, 0) to be equal 690', () => {
-        expect(cofactor(m, 0, 0)).toBe(690);
+        expect(Matrix.cofactor(m, 0, 0)).toBe(690);
     });
     test('cofactor(0, 1) to be equal 447', () => {
-        expect(cofactor(m, 0, 1)).toBe(447);
+        expect(Matrix.cofactor(m, 0, 1)).toBe(447);
     });
     test('cofactor(0, 2) to be equal 210', () => {
-        expect(cofactor(m, 0, 2)).toBe(210);
+        expect(Matrix.cofactor(m, 0, 2)).toBe(210);
     });
     test('cofactor(0, 3) to be equal 51', () => {
-        expect(cofactor(m, 0, 3)).toBe(51);
+        expect(Matrix.cofactor(m, 0, 3)).toBe(51);
     });
     test('det|M4x4| to be equal to -4071', () => {
-        expect(determinant(m)).toBe(-4071);
+        expect(Matrix.determinant(m)).toBe(-4071);
     });
 });
 
@@ -93,7 +93,7 @@ describe('inverse M4x4 (1)', () => {
         m.set(3, 2, -9);
         m.set(3, 3, -4);
 
-        invM = inverse(m);
+        invM = Matrix.inverse(m);
         // invM.set(0, 0, -0.15385);
         // invM.set(0, 1, -0.15385);
         // invM.set(0, 2, -0.28205);
@@ -182,7 +182,7 @@ describe('inverse M4x4 (2)', () => {
         m.set(3, 2, 6);
         m.set(3, 3, 2);
 
-        invM = inverse(m);
+        invM = Matrix.inverse(m);
         // invM.set(0, 0, -0.04074);
         // invM.set(0, 1, -0.07778);
         // invM.set(0, 2, 0.14444);
@@ -289,9 +289,9 @@ describe('Multiplying product by its inverse', () => {
         b.set(3, 2, 0);
         b.set(3, 3, 5);
 
-        let c = multiply(a, b);
-        let invB = inverse(b);
-        aProd = multiply(c, invB);
+        let c = Matrix.multiply(a, b);
+        let invB = Matrix.inverse(b);
+        aProd = Matrix.multiply(c, invB);
     });
     test('(C * invB)(0,0) to be equal a(0,0)', () => {
         expect(equal(aProd.get(0, 0), a.get(0, 0))).toBeTruthy();

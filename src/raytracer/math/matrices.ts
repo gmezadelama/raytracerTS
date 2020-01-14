@@ -1,5 +1,5 @@
 import { Tuple } from './tuple';
-import * as Transformations from '../features/transformations';
+import Transformations from '../features/transformations';
 
 export default class Matrix {
     private matrix:number[][] = [];
@@ -74,46 +74,155 @@ export default class Matrix {
 
     public translation = (x: number, y: number, z: number):Matrix => {
         let transfMat = Transformations.translation(x, y, z);
-        let m = multiply(transfMat, this);
+        let m = Matrix.multiply(transfMat, this);
         // this.setMatrix(m.getMatrixValues()); todo: ?
         return m;
     }
 
     public scaling = (x: number, y: number, z: number):Matrix => {
         let transfMat = Transformations.scaling(x, y, z);
-        let m = multiply(transfMat, this);
+        let m = Matrix.multiply(transfMat, this);
         // this.setMatrix(m.getMatrixValues()); todo: ?
         return m;
     }
 
     public rotateAroundX = (radians: number):Matrix => {
         let transfMat = Transformations.rotateAroundX(radians);
-        let m = multiply(transfMat, this);
+        let m = Matrix.multiply(transfMat, this);
         // this.setMatrix(m.getMatrixValues()); todo: ?
         return m;
     }
 
     public rotateAroundY = (radians: number):Matrix => {
         let transfMat = Transformations.rotateAroundY(radians);
-        let m = multiply(transfMat, this);
+        let m = Matrix.multiply(transfMat, this);
         // this.setMatrix(m.getMatrixValues()); todo: ?
         return m;
     }
 
     public rotateAroundZ = (radians: number):Matrix => {
         let transfMat = Transformations.rotateAroundZ(radians);
-        let m = multiply(transfMat, this);
+        let m = Matrix.multiply(transfMat, this);
         // this.setMatrix(m.getMatrixValues()); todo: ?
         return m;
     }
 
     public shearing = (xy: number, xz: number, yx: number, yz: number, zx: number, zy: number):Matrix => {
         let transfMat = Transformations.shearing(xy, xz, yx, yz, zx, zy);
-        let m = multiply(transfMat, this);
+        let m = Matrix.multiply(transfMat, this);
         // this.setMatrix(m.getMatrixValues()); todo: ?
         return m;
     }
 
+    /** Static methods */
+
+    public static equal = (a: Matrix, b: Matrix):boolean => {
+        if (a.getNumCols() !== b.getNumCols() || a.getNumRows() !== b.getNumRows()) {
+            return false;
+        }
+        for(let i = 0; i < a.getNumCols(); i++) {
+            for(let j = 0; j < a.getNumRows(); j++) {
+                if (a.get(i, j) !== b.get(i, j)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    
+    public static multiply = (a: Matrix, b: Matrix):Matrix | undefined => {
+        if (a.getNumCols() !== b.getNumRows()) {
+            return undefined;
+        }
+    
+        let m = new Matrix(a.getNumRows(), b.getNumCols());
+        for(let i = 0; i < m.getNumRows(); i++) {
+            for(let j = 0; j < m.getNumCols(); j++) {
+                m.set(i, j, dot(a.getRow(i), b.getColumn(j)));
+            }
+        }
+        return m;
+    }
+    
+    public static Identity = (dim: number = 4):Matrix => {
+        let id = new Matrix(dim, dim);
+        for(let i = 0; i < dim; i++) {
+            id.set(i, i, 1);
+        }
+        return id;
+    }
+    
+    public static subMatrix = (m: Matrix, x: number, y: number):Matrix => {
+        let s = new Matrix(m.getNumRows() - 1, m.getNumCols() - 1);
+        for(let i = 0; i < m.getNumRows(); i++) {
+            if (i === x) continue;
+            for(let j = 0; j < m.getNumCols(); j++) {
+                if (j === y) continue;
+                let row = i < x ? i : i - 1;
+                let col = j < y ? j : j - 1;
+                s.set(row, col, m.get(i, j));
+            }
+        }
+        return s;
+    }
+    
+    public static cofactor = (m: Matrix, i: number, j: number) => (
+            ((i + j) % 2 === 0 ? 1 : -1) *
+            Matrix.determinant(Matrix.subMatrix(m, i, j))
+    )
+    
+    public static determinant = (m: Matrix):number | undefined => {
+        if (m.getNumCols() !== m.getNumRows()) {
+            return undefined;
+        }
+        let size = m.getNumCols();
+        let det = 0;
+        if (size === 2) {
+            det = m.get(0, 0) * m.get(1, 1) - m.get(0, 1) * m.get(1, 0);
+        } else {
+            for (let j = 0; j < size; j++) {
+                det += m.get(0, j) * Matrix.cofactor(m, 0, j);
+            }
+        }
+        return det;
+    }
+    
+    public static inverse = (m: Matrix):Matrix | undefined => {
+        if (m.getNumCols() !== m.getNumRows()) {
+            return undefined;
+        }
+        try {
+            // matrix of cofactors
+            let c = new Matrix(m.getNumRows(), m.getNumCols());
+            // inverted matrix
+            let m2 = new Matrix(m.getNumRows(), m.getNumCols());
+            let d = Matrix.determinant(m);
+            for (let i = 0; i < m.getNumRows(); i++) {
+                for (let j = 0; j < m.getNumCols(); j++) {
+                    c.set(i, j, Matrix.cofactor(m, i, j));
+                    m2.set(j, i, c.get(i, j) / d);
+                }
+            }
+            return m2;
+        } catch(e) {
+            return undefined;
+        }
+    }
+    
+    public static tupleToMatrix = (t: Tuple):Matrix => {
+        let m = new Matrix(0, 0);
+        m.setMatrix(
+            [
+                [ t.x ],
+                [ t.y ],
+                [ t.z ],
+                [ t.w ]
+            ]
+        );
+        return m;
+    }
+    
+    /** end Static methods */
 }
 
 const dot = (a: number[], b: number[]):number | undefined => {
@@ -127,105 +236,3 @@ const dot = (a: number[], b: number[]):number | undefined => {
     return result;
 }
 
-export const equal = (a: Matrix, b: Matrix):boolean => {
-    if (a.getNumCols() !== b.getNumCols() || a.getNumRows() !== b.getNumRows()) {
-        return false;
-    }
-    for(let i = 0; i < a.getNumCols(); i++) {
-        for(let j = 0; j < a.getNumRows(); j++) {
-            if (a.get(i, j) !== b.get(i, j)) {
-                return false;
-            }
-        }
-    }
-    return true;
-}
-
-export const multiply = (a: Matrix, b: Matrix):Matrix | undefined => {
-    if (a.getNumCols() !== b.getNumRows()) {
-        return undefined;
-    }
-
-    let m = new Matrix(a.getNumRows(), b.getNumCols());
-    for(let i = 0; i < m.getNumRows(); i++) {
-        for(let j = 0; j < m.getNumCols(); j++) {
-            m.set(i, j, dot(a.getRow(i), b.getColumn(j)));
-        }
-    }
-    return m;
-}
-
-export const Identity = (dim: number = 4):Matrix => {
-    let id = new Matrix(dim, dim);
-    for(let i = 0; i < dim; i++) {
-        id.set(i, i, 1);
-    }
-    return id;
-}
-
-export const subMatrix = (m: Matrix, x: number, y: number):Matrix => {
-    let s = new Matrix(m.getNumRows() - 1, m.getNumCols() - 1);
-    for(let i = 0; i < m.getNumRows(); i++) {
-        if (i === x) continue;
-        for(let j = 0; j < m.getNumCols(); j++) {
-            if (j === y) continue;
-            let row = i < x ? i : i - 1;
-            let col = j < y ? j : j - 1;
-            s.set(row, col, m.get(i, j));
-        }
-    }
-    return s;
-}
-
-export const cofactor = (m: Matrix, i: number, j: number) => ((i + j) % 2 === 0 ? 1 : -1) * determinant(subMatrix(m, i, j));
-
-export const determinant = (m: Matrix):number | undefined => {
-    if (m.getNumCols() !== m.getNumRows()) {
-        return undefined;
-    }
-    let size = m.getNumCols();
-    let det = 0;
-    if (size === 2) {
-        det = m.get(0, 0) * m.get(1, 1) - m.get(0, 1) * m.get(1, 0);
-    } else {
-        for (let j = 0; j < size; j++) {
-            det += m.get(0, j) * cofactor(m, 0, j);
-        }
-    }
-    return det;
-}
-
-export const inverse = (m: Matrix):Matrix | undefined => {
-    if (m.getNumCols() !== m.getNumRows()) {
-        return undefined;
-    }
-    try {
-        // matrix of cofactors
-        let c = new Matrix(m.getNumRows(), m.getNumCols());
-        // inverted matrix
-        let m2 = new Matrix(m.getNumRows(), m.getNumCols());
-        let d = determinant(m);
-        for (let i = 0; i < m.getNumRows(); i++) {
-            for (let j = 0; j < m.getNumCols(); j++) {
-                c.set(i, j, cofactor(m, i, j));
-                m2.set(j, i, c.get(i, j) / d);
-            }
-        }
-        return m2;
-    } catch(e) {
-        return undefined;
-    }
-}
-
-export const tupleToMatrix = (t: Tuple):Matrix => {
-    let m = new Matrix(0, 0);
-    m.setMatrix(
-        [
-            [ t.x ],
-            [ t.y ],
-            [ t.z ],
-            [ t.w ]
-        ]
-    );
-    return m;
-}

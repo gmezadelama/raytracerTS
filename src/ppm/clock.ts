@@ -7,14 +7,14 @@ import {
     createPixelColor,
     multiplyScalar
 } from '../raytracer/math/tuple';
-import * as Transformations from '../raytracer/features/transformations';
-import Matrix, { inverse, Identity } from '../raytracer/math/matrices';
+import Transformations from '../raytracer/features/transformations';
+import Matrix from '../raytracer/math/matrices';
 
 import RTCanvas from './rtcanvas';
 
 export function addXHours (time: Point, h: number): Point {
     const hourRotation: number = 2 * Math.PI  / 12;
-    let rotMat = Identity(4).rotateAroundY(h * hourRotation);
+    let rotMat = Matrix.Identity(4).rotateAroundY(h * hourRotation);
     return Transformations.multiplyRotationPoint(rotMat, time);
 }
 

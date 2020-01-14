@@ -1,6 +1,6 @@
 import { Point, Vector, createPoint, createVector, multiplyScalar, add } from '../math/tuple';
-import Matrix, { inverse } from '../math/matrices';
-import * as Transformation from './transformations';
+import Matrix from '../math/matrices';
+import Transformations from './transformations';
 
 export default class Ray {
     private origin: Point;
@@ -22,8 +22,8 @@ export default class Ray {
     
     transformRay = (m: Matrix): Ray => (
         new Ray(
-            Transformation.multiplyTransformationMatrixPoint(m, this.origin),
-            Transformation.multiplyTransformationMatrixPoint(m, this.direction)
+            Transformations.multiplyTransformationMatrixPoint(m, this.origin),
+            Transformations.multiplyTransformationMatrixPoint(m, this.direction)
         )
     )
 }

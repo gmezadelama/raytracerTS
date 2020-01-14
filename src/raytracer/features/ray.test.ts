@@ -1,8 +1,8 @@
 import { Point, Vector, createPoint, createVector } from '../math/tuple';
 import Ray from './ray';
-import Intersection, { aggregateIntersections, hit } from './intersection'; 
+import Intersection from './intersection'; 
 import Sphere from '../geometry/sphere';
-import * as Transformation from './transformations';
+import Transformations from './transformations';
 
 describe('ray', () => {
     let r: Ray;
@@ -107,22 +107,22 @@ describe('hit to a sphere', () => {
     test('The hit, when all intersections have positive t', () => {
         let i1 = new Intersection(1, s);
         let i2 = new Intersection(2, s);
-        let is = aggregateIntersections(i2, i1);
-        let i: Intersection = hit(is);
+        let is = Intersection.aggregateIntersections(i2, i1);
+        let i: Intersection = Intersection.hit(is);
         expect(i.equals(i1)).toBeTruthy();
     });
     test('The hit, when some intersections have negative t', () => {
         let i1 = new Intersection(-1, s);
         let i2 = new Intersection(1, s);
-        let is = aggregateIntersections(i2, i1);
-        let i: Intersection = hit(is);
+        let is = Intersection.aggregateIntersections(i2, i1);
+        let i: Intersection = Intersection.hit(is);
         expect(i.equals(i2)).toBeTruthy();
     });
     test('The hit, when all intersections have negative t', () => {
         let i1 = new Intersection(-2, s);
         let i2 = new Intersection(-1, s);
-        let is = aggregateIntersections(i2, i1);
-        let i: Intersection = hit(is);
+        let is = Intersection.aggregateIntersections(i2, i1);
+        let i: Intersection = Intersection.hit(is);
         expect(i).toBeUndefined();
     });
     test('The hit is always the lowest nonnegative intersection', () => {
@@ -130,8 +130,8 @@ describe('hit to a sphere', () => {
         let i2 = new Intersection(7, s);
         let i3 = new Intersection(-3, s);
         let i4 = new Intersection(2, s);
-        let is = aggregateIntersections(i1, i2, i3, i4);
-        let i: Intersection = hit(is);
+        let is = Intersection.aggregateIntersections(i1, i2, i3, i4);
+        let i: Intersection = Intersection.hit(is);
         expect(i.equals(i4)).toBeTruthy();
     });
 });
@@ -139,7 +139,7 @@ describe('hit to a sphere', () => {
 describe('applying transformations on ray', () => {
     test('Translating a ray', () => {
         let r = new Ray(createPoint(1, 2, 3), createVector(0, 1, 0));
-        let m = Transformation.translation(3, 4, 5);
+        let m = Transformations.translation(3, 4, 5);
         let r2 = r.transformRay(m);
         const {
             origin: r2Origin,
@@ -154,7 +154,7 @@ describe('applying transformations on ray', () => {
     });
     test('Scaling a ray', () => {
         let r = new Ray(createPoint(1, 2, 3), createVector(0, 1, 0));
-        let m = Transformation.scaling(2, 3, 4);
+        let m = Transformations.scaling(2, 3, 4);
         let r2 = r.transformRay(m);
         const {
             origin: r2Origin,

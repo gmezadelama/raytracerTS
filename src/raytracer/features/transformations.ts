@@ -1,7 +1,7 @@
-import Matrix, { tupleToMatrix, multiply as multiplyMatrices, inverse } from '../math/matrices';
+import Matrix from '../math/matrices';
 import { Tuple, createPoint, matrixToTuple } from '../math/tuple';
 
-export const translation = (x: number, y: number, z: number):Matrix => {
+const translation = (x: number, y: number, z: number):Matrix => {
     let m = new Matrix(4, 4);
     m.setMatrix(
         [
@@ -14,7 +14,7 @@ export const translation = (x: number, y: number, z: number):Matrix => {
     return m;
 }
 
-export const scaling = (x: number, y: number, z: number):Matrix => {
+const scaling = (x: number, y: number, z: number):Matrix => {
     let m = new Matrix(4, 4);
     m.setMatrix(
         [
@@ -27,7 +27,7 @@ export const scaling = (x: number, y: number, z: number):Matrix => {
     return m;
 }
 
-export const rotateAroundX = (radians: number):Matrix => {
+const rotateAroundX = (radians: number):Matrix => {
     let m = new Matrix(4, 4);
     m.setMatrix(
         [
@@ -40,7 +40,7 @@ export const rotateAroundX = (radians: number):Matrix => {
     return m;
 }
 
-export const rotateAroundY = (radians: number):Matrix => {
+const rotateAroundY = (radians: number):Matrix => {
     let m = new Matrix(4, 4);
     m.setMatrix(
         [
@@ -53,7 +53,7 @@ export const rotateAroundY = (radians: number):Matrix => {
     return m;
 }
 
-export const rotateAroundZ = (radians: number):Matrix => {
+const rotateAroundZ = (radians: number):Matrix => {
     let m = new Matrix(4, 4);
     m.setMatrix(
         [
@@ -66,7 +66,7 @@ export const rotateAroundZ = (radians: number):Matrix => {
     return m;
 }
 
-export const shearing = (xy: number, xz: number, yx: number, yz: number, zx: number, zy: number):Matrix => {
+const shearing = (xy: number, xz: number, yx: number, yz: number, zx: number, zy: number):Matrix => {
     let m = new Matrix(4, 4);
     m.setMatrix(
         [
@@ -79,30 +79,30 @@ export const shearing = (xy: number, xz: number, yx: number, yz: number, zx: num
     return m;
 }
 
-export const multiplyTransformationMatrixPoint = (m: Matrix, point: Tuple):Tuple | undefined => {
-    let pm = tupleToMatrix(point);
-    let prod = multiplyMatrices(m, pm);
+const multiplyTransformationMatrixPoint = (m: Matrix, point: Tuple):Tuple | undefined => {
+    let pm = Matrix.tupleToMatrix(point);
+    let prod = Matrix.multiply(m, pm);
     if (!prod) return undefined;
     return matrixToTuple(prod);
 }
 
-export const multiplyInvTransformationMatrixPoint = (m: Matrix, point: Tuple):Tuple | undefined => {
-    return multiplyTransformationMatrixPoint(inverse(m), point);
+const multiplyInvTransformationMatrixPoint = (m: Matrix, point: Tuple):Tuple | undefined => {
+    return multiplyTransformationMatrixPoint(Matrix.inverse(m), point);
 }
 
-export const multiplyTranslationPoint =
+const multiplyTranslationPoint =
     (m: Matrix, point: Tuple):Tuple | undefined => multiplyTransformationMatrixPoint(m, point);
 
-export const multiplyScalingPoint =
+const multiplyScalingPoint =
     (m: Matrix, point: Tuple):Tuple | undefined => multiplyTransformationMatrixPoint(m, point);
 
-export const multiplyRotationPoint =
+const multiplyRotationPoint =
     (m: Matrix, point: Tuple):Tuple | undefined => multiplyTransformationMatrixPoint(m, point);
 
-export const multiplyShearingPoint =
+const multiplyShearingPoint =
     (m: Matrix, point: Tuple):Tuple | undefined => multiplyTransformationMatrixPoint(m, point);
 
-export const applyChainedTransformations = (matrices: Matrix[], point: Tuple):Tuple | undefined => {
+const applyChainedTransformations = (matrices: Matrix[], point: Tuple):Tuple | undefined => {
     if (!matrices || matrices.length === 0) return undefined;
     return matrices.reverse().reduce((acc: Tuple, m: Matrix) => (
         multiplyTranslationPoint(m, acc)
@@ -114,3 +114,21 @@ export enum TransformationType {
     Scaling = 'scaling',
     Rotation = 'rotation'
 }
+
+const Transformations = {
+    translation,
+    scaling,
+    rotateAroundX,
+    rotateAroundY,
+    rotateAroundZ,
+    shearing,
+    multiplyTransformationMatrixPoint,
+    multiplyInvTransformationMatrixPoint,
+    multiplyTranslationPoint,
+    multiplyScalingPoint,
+    multiplyRotationPoint,
+    multiplyShearingPoint,
+    applyChainedTransformations
+};
+
+export default Transformations;

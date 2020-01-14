@@ -1,5 +1,5 @@
 import RTCanvas from './rtcanvas';
-import Matrix, { inverse, Identity } from '../raytracer/math/matrices';
+import Matrix from '../raytracer/math/matrices';
 import * as Transformations from '../raytracer/features/transformations';
 import { Point, Vector,
         PixelColor, createPoint,
@@ -7,7 +7,7 @@ import { Point, Vector,
         normalize, subtract } from '../raytracer/math/tuple';
 import Ray from '../raytracer/features/ray';
 import Sphere from '../raytracer/geometry/sphere';
-import Intersection, { hit } from '../raytracer/features/intersection';
+import Intersection from '../raytracer/features/intersection';
 
 export function castRayToRedSphere(): string {
     const rayOrigin: Point = createPoint(0, 0, -5);
@@ -37,7 +37,7 @@ export function castRayToRedSphere(): string {
             let wallTarget = createPoint(worldX, worldY, wallZ);
             let r = new Ray(rayOrigin, normalize(subtract(wallTarget, rayOrigin)));
             let is: Intersection[] = sphere.intersect(r);
-            if (hit(is)) {
+            if (Intersection.hit(is)) {
                 canvas.writePixel(x, y, sphereColor);
             }
         }
