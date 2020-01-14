@@ -2,7 +2,7 @@ import { Point, createPoint, subtract, Vector, createVector, dot, multiplyScalar
 import Ray from '../features/ray';
 import Intersection from '../features/intersection';
 import Shape from './shape';
-import { inverse } from '../features/matrices';
+import { inverse } from '../math/matrices';
 
 export default class Sphere extends Shape {
     private origin: Point;

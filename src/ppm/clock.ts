@@ -8,9 +8,9 @@ import {
     multiplyScalar
 } from '../raytracer/math/tuple';
 import * as Transformations from '../raytracer/features/transformations';
-import Matrix, { inverse, Identity } from '../raytracer/features/matrices';
+import Matrix, { inverse, Identity } from '../raytracer/math/matrices';
 
-import RTCanvas from '../raytracer/features/rtcanvas';
+import RTCanvas from './rtcanvas';
 
 export function addXHours (time: Point, h: number): Point {
     const hourRotation: number = 2 * Math.PI  / 12;

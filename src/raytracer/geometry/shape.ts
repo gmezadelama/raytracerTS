@@ -1,6 +1,6 @@
 import Ray from '../features/ray';
 import Intersection from '../features/intersection';
-import Matrix, { Identity, multiply } from '../features/matrices';
+import Matrix, { Identity, multiply } from '../math/matrices';
 
 export default abstract class Shape {
     private id: number;

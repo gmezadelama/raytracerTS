@@ -1,5 +1,5 @@
-import { Tuple } from '../math/tuple';
-import * as Transformations from './transformations';
+import { Tuple } from './tuple';
+import * as Transformations from '../features/transformations';
 
 export default class Matrix {
     private matrix:number[][] = [];

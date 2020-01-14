@@ -1,4 +1,4 @@
-import Matrix from '../features/matrices';
+import Matrix from './matrices';
 
 type wRange = 0 | 1;
 

@@ -1,5 +1,5 @@
 import { Point, Vector, createPoint, createVector, multiplyScalar, add } from '../math/tuple';
-import Matrix, { inverse } from './matrices';
+import Matrix, { inverse } from '../math/matrices';
 import * as Transformation from './transformations';
 
 export default class Ray {

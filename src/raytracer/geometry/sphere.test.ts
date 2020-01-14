@@ -1,7 +1,7 @@
 import Ray from '../features/ray';
 import Sphere from './sphere';
 import * as Transformation from '../features/transformations';
-import { equal, Identity } from '../features/matrices';
+import { equal, Identity } from '../math/matrices';
 import { createPoint, createVector } from '../math/tuple';
 
 describe(`sphere's tests`, () => {

@@ -7,7 +7,7 @@ import {
     createPixelColor,
     multiplyScalar
 } from '../raytracer/math/tuple';
-import RTCanvas from '../raytracer/features/rtcanvas';
+import RTCanvas from './rtcanvas';
 
 interface Projectile {
     position: Tuple,

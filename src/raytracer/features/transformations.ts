@@ -1,4 +1,4 @@
-import Matrix, { tupleToMatrix, multiply as multiplyMatrices, inverse } from './matrices';
+import Matrix, { tupleToMatrix, multiply as multiplyMatrices, inverse } from '../math/matrices';
 import { Tuple, createPoint, matrixToTuple } from '../math/tuple';
 
 export const translation = (x: number, y: number, z: number):Matrix => {

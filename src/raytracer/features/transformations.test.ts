@@ -1,5 +1,5 @@
 import * as Transformations from './transformations';
-import Matrix, { inverse, Identity } from './matrices';
+import Matrix, { inverse, Identity } from '../math/matrices';
 import { Point, Vector, createPoint, createVector } from '../math/tuple';
 import { equal } from '../math/operations';
 import { addXHours } from '../../ppm/clock';

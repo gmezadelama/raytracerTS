@@ -1,4 +1,4 @@
-import { Tuple, PixelColor, createPixelColor } from '../math/tuple';
+import { Tuple, PixelColor, createPixelColor } from '../raytracer/math/tuple';
 
 export default class RTCanvas {
     private height: number;

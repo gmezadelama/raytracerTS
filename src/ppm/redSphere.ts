@@ -1,5 +1,5 @@
-import RTCanvas from '../raytracer/features/rtcanvas';
-import Matrix, { inverse, Identity } from '../raytracer/features/matrices';
+import RTCanvas from './rtcanvas';
+import Matrix, { inverse, Identity } from '../raytracer/math/matrices';
 import * as Transformations from '../raytracer/features/transformations';
 import { Point, Vector,
         PixelColor, createPoint,
