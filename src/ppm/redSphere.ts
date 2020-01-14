@@ -1,6 +1,6 @@
 import RTCanvas from './rtcanvas';
 import Matrix from '../raytracer/math/matrices';
-import * as Transformations from '../raytracer/features/transformations';
+import Transformations from '../raytracer/features/transformations';
 import { Point, Vector,
         PixelColor, createPoint,
         createVector, createPixelColor,
@@ -22,6 +22,21 @@ export function castRayToRedSphere(): string {
     let canvas = new RTCanvas(canvasPixels, canvasPixels);
     const sphereColor: PixelColor = createPixelColor(1, 0, 0);
     let sphere: Sphere = new Sphere();
+    // sphere.setTransform(Transformations.scaling(1, 0.5, 1));
+    // sphere.setTransform(Transformations.scaling(0.5, 1, 1));
+    // sphere.setTransform(
+    //     Matrix
+    //     .Identity()
+    //     .scaling(0.5, 1, 1)
+    //     .rotateAroundZ(Math.PI / 4)
+    // );
+
+    sphere.setTransform(
+        Matrix
+        .Identity()
+        .scaling(0.5, 1, 1)
+        .shearing(1, 0, 0, 0, 0, 0)
+    );
 
     // scanning each row of pixel in the canvas
     for (let y = 0; y < canvasPixels; y++) {

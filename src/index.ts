@@ -13,5 +13,5 @@ window.onload = () => {
     context.fillStyle = '#9c54e6';
     console.log('Plot: ProjectileSimulation.convertToPPM', getProjectileSimulationPPM());
     console.log('Plot: ClockHourSimulation.convertToPPM', getClockHoursPositionPPM());
-    console.log('Plot: ClockHourSimulation.convertToPPM', castRayToRedSphere());    
+    console.log('Plot: RedSphere.convertToPPM', castRayToRedSphere());    
 }
