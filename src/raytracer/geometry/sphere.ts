@@ -1,4 +1,4 @@
-import { Point, createPoint, subtract, Vector, createVector, dot, multiplyScalar, normalize } from '../math/tuple';
+import { Point, createPoint, subtract, Vector, createVector, dot, multiplyScalar, normalize, matrixToTuple } from '../math/tuple';
 import Ray from '../features/ray';
 import Intersection from '../features/intersection';
 import Shape from './shape';
@@ -35,10 +35,15 @@ export default class Sphere extends Shape {
         }
     }
 
-    public normalAt = (p: Point): Vector => {
+    public normalAt = (worldPoint: Point): Vector => {
         // Since it's a unit sphere the vector will
         // be normalized by default but the calculation
         // is still indicated.
-        return normalize(subtract(p, this.origin));
+        let objectPoint: Point = matrixToTuple(Matrix.multiply(Matrix.inverse(this.getTransform()), Matrix.tupleToMatrix(worldPoint)));
+        let objectNormal: Vector = subtract(objectPoint, createPoint(0, 0, 0));
+        let worldNormal: Vector = matrixToTuple(Matrix.multiply(Matrix.inverse(this.getTransform()).transpose(), Matrix.tupleToMatrix(objectNormal)));
+        worldNormal.w = 0;
+        return normalize(worldNormal);
     }
+
 }

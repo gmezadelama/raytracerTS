@@ -3,6 +3,7 @@ import Sphere from './sphere';
 import Transformations from '../features/transformations';
 import Matrix from '../math/matrices';
 import { createPoint, createVector, vectorMagnitude } from '../math/tuple';
+import { equal } from '../math/operations';
 
 describe(`sphere's transformation and intersection tests`, () => {
     test(`A sphere's default transformation`, () => {
@@ -78,9 +79,9 @@ describe('sphere\'s normal tests ', () => {
         s.setTransform(Transformations.translation(0, 1, 0));
         let n = s.normalAt(createPoint(0, 1.70711, -0.70711));
         let v = createVector(0, 0.70711, -0.70711);
-        expect(n.x).toBe(v.x);
-        expect(n.y).toBe(v.y);
-        expect(n.z).toBe(v.z);
+        expect(equal(n.x, v.x)).toBeTruthy();
+        expect(equal(n.y, v.y)).toBeTruthy();
+        expect(equal(n.z, v.z)).toBeTruthy();
         expect(n.w).toBe(v.w);
     });
     test('Computing the normal on a transformed sphere', () => {
@@ -92,9 +93,9 @@ describe('sphere\'s normal tests ', () => {
         );
         let n = s.normalAt(createPoint(0, Math.SQRT2 / 2, - Math.SQRT2 / 2));
         let v = createVector(0, 0.97014, -0.24254);
-        expect(n.x).toBe(v.x);
-        expect(n.y).toBe(v.y);
-        expect(n.z).toBe(v.z);
+        expect(equal(n.x, v.x)).toBeTruthy();
+        expect(equal(n.y, v.y)).toBeTruthy();
+        expect(equal(n.z, v.z)).toBeTruthy();
         expect(n.w).toBe(v.w);
     });
 });
