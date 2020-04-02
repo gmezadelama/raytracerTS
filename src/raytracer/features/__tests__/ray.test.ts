@@ -1,8 +1,8 @@
-import { Point, Vector, createPoint, createVector } from '../math/tuple';
-import Ray from './ray';
-import Intersection from './intersection'; 
-import Sphere from '../geometry/sphere';
-import Transformations from './transformations';
+import { Point, Vector, createPoint, createVector } from '../../math/tuple';
+import Ray from '../ray';
+import Intersection from '../intersection'; 
+import Sphere from '../../geometry/sphere';
+import Transformations from '../transformations';
 
 describe('ray', () => {
     let r: Ray;

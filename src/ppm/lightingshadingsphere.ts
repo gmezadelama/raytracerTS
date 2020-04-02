@@ -8,7 +8,7 @@ import { Point, Vector,
 import Ray from '../raytracer/features/ray';
 import Sphere from '../raytracer/geometry/sphere';
 import Intersection from '../raytracer/features/intersection';
-import Light, { lighting } from '../raytracer/shading/ligth';
+import Light, { lighting } from '../raytracer/shading/light';
 
 export function cast3DSphere(): string {
     const rayOrigin: Point = createPoint(0, 0, -5);

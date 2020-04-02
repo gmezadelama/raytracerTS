@@ -1,6 +1,6 @@
 
-import Matrix from './matrices';
-import { equal } from './operations';
+import Matrix from '../matrices';
+import { equal } from '../operations';
 
 test('m[1][2] to be equal to 3', () => {
     let m = new Matrix(2, 3);

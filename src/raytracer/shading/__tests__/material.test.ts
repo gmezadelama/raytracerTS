@@ -1,7 +1,7 @@
-import Material from "./material";
-import { equal } from "../math/operations";
-import Sphere from "../geometry/sphere";
-import { createPixelColor } from "../math/tuple";
+import Material from "../material";
+import { equal } from "../../math/operations";
+import Sphere from "../../geometry/sphere";
+import { createPixelColor } from "../../math/tuple";
 
 describe('Material testing', () => {
   it('is the default material', () => {

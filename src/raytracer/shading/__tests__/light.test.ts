@@ -1,7 +1,7 @@
-import { PixelColor, Point, createPixelColor, createPoint, createVector, Vector } from "../math/tuple";
-import Light, { lighting, reflectLight } from "./ligth";
-import Material from "./material";
-import { equal } from "../math/operations";
+import { PixelColor, Point, createPixelColor, createPoint, createVector, Vector } from "../../math/tuple";
+import Light, { lighting, reflectLight } from "../light";
+import Material from "../material";
+import { equal } from "../../math/operations";
 
 describe('Light testing', () => {
   test('A point light has a position and intensity', () => {

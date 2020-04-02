@@ -1,8 +1,8 @@
-import Transformations from './transformations';
-import Matrix from '../math/matrices';
-import { Point, Vector, createPoint, createVector } from '../math/tuple';
-import { equal } from '../math/operations';
-import { addXHours } from '../../ppm/clock';
+import Transformations from '../transformations';
+import Matrix from '../../math/matrices';
+import { Point, Vector, createPoint, createVector } from '../../math/tuple';
+import { equal } from '../../math/operations';
+import { addXHours } from '../../../ppm/clock';
 
 describe('shearing', () => {
     test('moves x in proportion of y', () => {

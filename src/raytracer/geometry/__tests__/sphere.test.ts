@@ -1,9 +1,9 @@
-import Ray from '../features/ray';
-import Sphere from './sphere';
-import Transformations from '../features/transformations';
-import Matrix from '../math/matrices';
-import { createPoint, createVector, vectorMagnitude } from '../math/tuple';
-import { equal } from '../math/operations';
+import Ray from '../../features/ray';
+import Sphere from '../sphere';
+import Transformations from '../../features/transformations';
+import Matrix from '../../math/matrices';
+import { createPoint, createVector, vectorMagnitude } from '../../math/tuple';
+import { equal } from '../../math/operations';
 
 describe(`sphere's transformation and intersection tests`, () => {
     test(`A sphere's default transformation`, () => {
