@@ -6,20 +6,24 @@ import Material from '../shading/material';
 
 export default abstract class Shape {
     private id: number;
-    private transform: Matrix;
+    private _transform: Matrix;
     private _material: Material;
     constructor() {
         this.id = (new Date()).getTime();
-        this.transform = Matrix.Identity();
+        this._transform = Matrix.Identity();
         this._material = new Material();
     }
     public equals = (o: Shape) => this.id === o.id;
-    public getTransform = (): Matrix => this.transform;
-    public setTransform = (m: Matrix) => {
-        this.transform = m;
-    }
     public abstract intersect(r: Ray): Intersection[];
     public abstract normalAt(p: Point): Vector;
+
+    get transform(): Matrix {
+        return this._transform;
+    }
+
+    set transform(m: Matrix) {
+        this._transform = m;
+    }
 
     get material(): Material {
         return this._material;

@@ -8,18 +8,18 @@ import { equal } from '../../math/operations';
 describe(`sphere's transformation and intersection tests`, () => {
     test(`A sphere's default transformation`, () => {
         let s = new Sphere();
-        expect(Matrix.equal(s.getTransform(), Matrix.Identity())).toBeTruthy();
+        expect(Matrix.equal(s.transform, Matrix.Identity())).toBeTruthy();
     });
     test(`Changing a sphere's transformation`, () => {
         let s = new Sphere();
         let t = Transformations.translation(2, 3 ,4);
-        s.setTransform(t);
-        expect(Matrix.equal(s.getTransform(), t)).toBeTruthy();
+        s.transform = t;
+        expect(Matrix.equal(s.transform, t)).toBeTruthy();
     });
     test('Intersecting a scaled sphere with a ray', () => {
         let r = new Ray(createPoint(0, 0, -5), createVector(0, 0, 1));
         let s = new Sphere();
-        s.setTransform(Transformations.scaling(2, 2, 2));
+        s.transform = Transformations.scaling(2, 2, 2);
         let is = s.intersect(r);
         expect(is.length).toBe(2);
         expect(is[0].t).toBe(3);
@@ -28,7 +28,7 @@ describe(`sphere's transformation and intersection tests`, () => {
     test('Intersecting a translated sphere with a ray', () => {
         let r = new Ray(createPoint(0, 0, -5), createVector(0, 0, 1));
         let s = new Sphere();
-        s.setTransform(Transformations.translation(5, 0, 0));
+        s.transform = Transformations.translation(5, 0, 0);
         let is = s.intersect(r);
         expect(is.length).toBe(0);
     });
@@ -76,7 +76,7 @@ describe('sphere\'s normal tests ', () => {
         expect(vectorMagnitude(n)).toBe(1);
     });
     test('Computing the normal on a translated sphere', () => {
-        s.setTransform(Transformations.translation(0, 1, 0));
+        s.transform = Transformations.translation(0, 1, 0);
         let n = s.normalAt(createPoint(0, 1.70711, -0.70711));
         let v = createVector(0, 0.70711, -0.70711);
         expect(equal(n.x, v.x)).toBeTruthy();
@@ -85,11 +85,9 @@ describe('sphere\'s normal tests ', () => {
         expect(n.w).toBe(v.w);
     });
     test('Computing the normal on a transformed sphere', () => {
-        s.setTransform(
-            Transformations.getChainedTransformations(
-                Transformations.scaling(1, 0.5, 1),
-                Transformations.rotateAroundZ(Math.PI / 5)
-            )
+        s.transform = Transformations.getChainedTransformations(
+            Transformations.scaling(1, 0.5, 1),
+            Transformations.rotateAroundZ(Math.PI / 5)
         );
         let n = s.normalAt(createPoint(0, Math.SQRT2 / 2, - Math.SQRT2 / 2));
         let v = createVector(0, 0.97014, -0.24254);

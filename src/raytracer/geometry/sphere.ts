@@ -14,7 +14,7 @@ export default class Sphere extends Shape {
     }
 
     public intersect = (r: Ray): Intersection[] => {
-        let r2 = r.transformRay(Matrix.inverse(this.getTransform()));
+        let r2 = r.transformRay(Matrix.inverse(this.transform));
         const {
             origin: rayOrigin,
             direction: rayDirection
@@ -39,9 +39,9 @@ export default class Sphere extends Shape {
         // Since it's a unit sphere the vector will
         // be normalized by default but the calculation
         // is still indicated.
-        let objectPoint: Point = matrixToTuple(Matrix.multiply(Matrix.inverse(this.getTransform()), Matrix.tupleToMatrix(worldPoint)));
+        let objectPoint: Point = matrixToTuple(Matrix.multiply(Matrix.inverse(this.transform), Matrix.tupleToMatrix(worldPoint)));
         let objectNormal: Vector = subtract(objectPoint, createPoint(0, 0, 0));
-        let worldNormal: Vector = matrixToTuple(Matrix.multiply(Matrix.inverse(this.getTransform()).transpose(), Matrix.tupleToMatrix(objectNormal)));
+        let worldNormal: Vector = matrixToTuple(Matrix.multiply(Matrix.inverse(this.transform).transpose(), Matrix.tupleToMatrix(objectNormal)));
         worldNormal.w = 0;
         return normalize(worldNormal);
     }
