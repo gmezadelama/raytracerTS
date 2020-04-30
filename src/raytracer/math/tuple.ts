@@ -26,7 +26,7 @@ const tuple = (x: number, y: number, z: number, w: wRange):Tuple => ({
     w: w
 });
 
-export const add = (a: Tuple, b: Tuple):Tuple | undefined => {
+const singleAddition = (a: Tuple, b: Tuple):Tuple | undefined => {
     // it doesn't make sense to add two points!
     if (a.w === 1 && b.w === 1) {
         return undefined;
@@ -36,6 +36,19 @@ export const add = (a: Tuple, b: Tuple):Tuple | undefined => {
         y: a.y + b.y,
         z: a.z + b.z,
         w: (a.w + b.w) as wRange
+    }
+};
+
+export const add = (...vectors: Tuple[]):Tuple | undefined => {
+    if (vectors && vectors.length > 0) {
+        let acc = vectors[0];
+        for (let i = 1; i < vectors.length; i++) {
+            if (!vectors[i]) continue;
+            acc = singleAddition(acc, vectors[i]);
+        }
+        return acc;
+    } else {
+        return undefined;
     }
 };
 

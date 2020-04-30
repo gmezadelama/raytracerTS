@@ -21,7 +21,7 @@ interface Environement {
 
 function tick (env: Environement, proj: Projectile):Projectile {
     let position = add(proj.position, proj.velocity);
-    let velocity = add(proj.velocity, add(env.gravity, env.wind));
+    let velocity = add(proj.velocity, env.gravity, env.wind);
     return {
         position,
         velocity

@@ -29,7 +29,6 @@ export default class Light {
 export const reflectLight = (inV: Vector, normal: Vector): Vector => subtract(inV, multiplyScalar(normal, 2 * dot(inV, normal)))
 
 export const lighting = (m: Material, l: Light, point: Point, eyev: Vector, normalv: Vector): PixelColor => {
-  // TODO: implement, ambient, diffuse and specular are vectors! fix that!
   let ambient: PixelColor = createPixelColor(0, 0, 0);
   let diffuse: PixelColor = createPixelColor(0, 0, 0);
   let specular: PixelColor = createPixelColor(0, 0, 0);
@@ -63,5 +62,5 @@ export const lighting = (m: Material, l: Light, point: Point, eyev: Vector, norm
     }
   }
 
-  return add(ambient, add(diffuse, specular));
+  return add(ambient, diffuse, specular);
 }
