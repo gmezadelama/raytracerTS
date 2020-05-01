@@ -18,6 +18,9 @@ export default class Ray {
         }
     }
 
+    /**
+     * This method is the equivalent to the function 'position(ray, t)' from the book
+     * */ 
     getTPoint = (t: number) => add(this.origin, multiplyScalar(this.direction, t))
     
     transformRay = (m: Matrix): Ray => (

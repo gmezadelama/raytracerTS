@@ -1,11 +1,13 @@
 import World from '../world';
 import Light from '../../shading/light';
-import { createPoint, createPixelColor, createVector } from '../../math/tuple';
+import { createPoint, createPixelColor, createVector, PixelColor } from '../../math/tuple';
 import Sphere from '../../geometry/sphere';
+import Shape from '../../geometry/shape';
 import Material from '../../shading/material';
 import Transformations from '../transformations';
 import Ray from '../ray';
 import { equal } from '../../math/operations';
+import Intersection, { IntersectionComputations } from '../intersection';
 
 describe('The default world', () => {
   let defaultWorld: World;
@@ -29,5 +31,28 @@ describe('The default world', () => {
     expect(equal(xs[1].t, 4.5)).toBeTruthy();
     expect(equal(xs[2].t, 5.5)).toBeTruthy();
     expect(equal(xs[3].t, 6)).toBeTruthy();
+  });
+  test('Shading an intersection', () => {
+    let r: Ray = new Ray(createPoint(0, 0, -5), createVector(0, 0, 1));
+    let shape: Shape = defaultWorld.sceneObjects[0];
+    let i: Intersection = new Intersection(4, shape);
+    let comps: IntersectionComputations = Intersection.prepareComputations(i, r);
+    let c: PixelColor;
+    c = Intersection.shadeHit(defaultWorld, comps);
+    expect(equal(c.x, 0.38066)).toBeTruthy();
+    expect(equal(c.y, 0.47583)).toBeTruthy();
+    expect(equal(c.z, 0.2855)).toBeTruthy();
+  });
+  test('Shading an intersection from the inside', () => {
+    defaultWorld.lightSource = new Light(createPoint(0, 0.25, 0), createPixelColor(1, 1, 1));
+    let r: Ray = new Ray(createPoint(0, 0, 0), createVector(0, 0, 1));
+    let shape: Shape = defaultWorld.sceneObjects[1];
+    let i: Intersection = new Intersection(0.5, shape);
+    let comps: IntersectionComputations = Intersection.prepareComputations(i, r);
+    let c: PixelColor;
+    c = Intersection.shadeHit(defaultWorld, comps);
+    expect(equal(c.x, 0.90498)).toBeTruthy();
+    expect(equal(c.y, 0.90498)).toBeTruthy();
+    expect(equal(c.z, 0.90498)).toBeTruthy();
   });
 });

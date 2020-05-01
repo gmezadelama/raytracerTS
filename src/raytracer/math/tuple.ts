@@ -65,7 +65,12 @@ export const subtract = (a: Tuple, b: Tuple):Tuple | undefined => {
     }
 };
 
-export const negateVector = (a: Tuple):Tuple | undefined => multiplyScalar(a, -1);
+export const negateVector = (a: Tuple):Tuple | undefined => ({
+    x: a.x === 0 ? 0 : -a.x,
+    y: a.y === 0 ? 0 : -a.y,
+    z: a.z === 0 ? 0 : -a.z,
+    w: 0
+})
 
 export const multiplyScalar = (a: Tuple, s: number):Tuple | undefined => {
     if (a.w === 1) {
