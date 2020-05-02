@@ -2,7 +2,7 @@ import Shape from '../geometry/shape';
 import Light from '../shading/light';
 import Ray from './ray';
 import Intersection, { IntersectionComputations } from './intersection';
-import { PixelColor } from '../math/tuple';
+import { PixelColor, createPixelColor } from '../math/tuple';
 import { lighting } from '../shading/light';
 
 export default class World {
@@ -46,4 +46,15 @@ export default class World {
     return lighting(comps.object.material, this._lightSource, comps.point, comps.eyev, comps.normalv);
   }
 
+  public colorAt(r: Ray): PixelColor {
+    // get intersections in the world
+    let is: Intersection[] = this.worldIntersection(r);
+    // calculate the hit
+    let hit: Intersection = Intersection.hit(is);
+    // if there is no hit return black color
+    if (!hit) return createPixelColor(0, 0, 0);
+    // calculate color for that hit
+    let comps = Intersection.prepareComputations(hit, r);
+    return this.shadeHit(comps);
+  }
 }

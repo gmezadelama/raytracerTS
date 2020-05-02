@@ -11,7 +11,7 @@ import Intersection, { IntersectionComputations } from '../intersection';
 
 describe('The default world', () => {
   let defaultWorld: World;
-  beforeAll(() => {
+  beforeEach(() => {
     defaultWorld = new World();
     defaultWorld.lightSource = new Light(createPoint(-10, 10, -10), createPixelColor(1, 1, 1));
     let s1: Sphere = new Sphere();
@@ -42,6 +42,7 @@ describe('The default world', () => {
     expect(equal(c.x, 0.38066)).toBeTruthy();
     expect(equal(c.y, 0.47583)).toBeTruthy();
     expect(equal(c.z, 0.2855)).toBeTruthy();
+    expect(equal(c.w, 0)).toBeTruthy();
   });
   test('Shading an intersection from the inside', () => {
     defaultWorld.lightSource = new Light(createPoint(0, 0.25, 0), createPixelColor(1, 1, 1));
@@ -54,5 +55,34 @@ describe('The default world', () => {
     expect(equal(c.x, 0.90498)).toBeTruthy();
     expect(equal(c.y, 0.90498)).toBeTruthy();
     expect(equal(c.z, 0.90498)).toBeTruthy();
+    expect(equal(c.w, 0)).toBeTruthy();
+  });
+  test('The color when a ray misses', () => {
+    let r: Ray = new Ray(createPoint(0, 0, -5), createVector(0, 1, 0));
+    let c = defaultWorld.colorAt(r);
+    expect(equal(c.x, 0)).toBeTruthy();
+    expect(equal(c.y, 0)).toBeTruthy();
+    expect(equal(c.z, 0)).toBeTruthy();
+    expect(equal(c.w, 0)).toBeTruthy();
+  });
+  test('The color when a ray hits', () => {
+    let r: Ray = new Ray(createPoint(0, 0, -5), createVector(0, 0, 1));
+    let c: PixelColor = defaultWorld.colorAt(r);
+    expect(equal(c.x, 0.38066)).toBeTruthy();
+    expect(equal(c.y, 0.47583)).toBeTruthy();
+    expect(equal(c.z, 0.2855)).toBeTruthy();
+    expect(equal(c.w, 0)).toBeTruthy();
+  });
+  test('The color with an intersection behind the ray', () => {
+    let outer: Shape = defaultWorld.sceneObjects[0];
+    outer.material.ambient = 1;
+    let inner: Shape = defaultWorld.sceneObjects[1];
+    inner.material.ambient = 1;
+    let r: Ray = new Ray(createPoint(0, 0, 0.75), createVector(0, 0, -1));
+    let c = defaultWorld.colorAt(r);
+    expect(equal(c.x, inner.material.color.x)).toBeTruthy();
+    expect(equal(c.y, inner.material.color.y)).toBeTruthy();
+    expect(equal(c.z, inner.material.color.z)).toBeTruthy();
+    expect(equal(c.w, 0)).toBeTruthy();
   });
 });
