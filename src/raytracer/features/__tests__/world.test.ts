@@ -38,7 +38,7 @@ describe('The default world', () => {
     let i: Intersection = new Intersection(4, shape);
     let comps: IntersectionComputations = Intersection.prepareComputations(i, r);
     let c: PixelColor;
-    c = Intersection.shadeHit(defaultWorld, comps);
+    c = defaultWorld.shadeHit(comps);
     expect(equal(c.x, 0.38066)).toBeTruthy();
     expect(equal(c.y, 0.47583)).toBeTruthy();
     expect(equal(c.z, 0.2855)).toBeTruthy();
@@ -50,7 +50,7 @@ describe('The default world', () => {
     let i: Intersection = new Intersection(0.5, shape);
     let comps: IntersectionComputations = Intersection.prepareComputations(i, r);
     let c: PixelColor;
-    c = Intersection.shadeHit(defaultWorld, comps);
+    c = defaultWorld.shadeHit(comps);
     expect(equal(c.x, 0.90498)).toBeTruthy();
     expect(equal(c.y, 0.90498)).toBeTruthy();
     expect(equal(c.z, 0.90498)).toBeTruthy();

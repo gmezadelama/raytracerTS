@@ -1,8 +1,9 @@
 import Shape from '../geometry/shape';
 import Light from '../shading/light';
 import Ray from './ray';
-import Intersection from './intersection';
-
+import Intersection, { IntersectionComputations } from './intersection';
+import { PixelColor } from '../math/tuple';
+import { lighting } from '../shading/light';
 
 export default class World {
   private _sceneObjects: Shape[];
@@ -39,5 +40,10 @@ export default class World {
     }
     is.sort((ia: Intersection, ib: Intersection) => ia.t - ib.t);
     return is;
-  } 
+  }
+
+  public shadeHit = (comps: IntersectionComputations): PixelColor => {
+    return lighting(comps.object.material, this._lightSource, comps.point, comps.eyev, comps.normalv);
+  }
+
 }

@@ -1,8 +1,6 @@
 import Shape from '../geometry/shape';
-import { Point, Vector, negateVector, dot, PixelColor } from '../math/tuple';
+import { Point, Vector, negateVector, dot } from '../math/tuple';
 import Ray from './ray';
-import World from './world';
-import { lighting } from '../shading/light';
 
 export interface IntersectionComputations {
     t: number;
@@ -53,9 +51,6 @@ export default class Intersection {
         };
     }
 
-    public static shadeHit = (world: World, comps: IntersectionComputations): PixelColor => {
-        return lighting(comps.object.material, world.lightSource, comps.point, comps.eyev, comps.normalv);
-    }
     /** end Static methods */
 }
  
