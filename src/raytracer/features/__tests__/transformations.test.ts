@@ -254,22 +254,7 @@ describe('View Transform', () => {
         let up: Vector = createVector(0, 1, 0);
         let t: Matrix = viewTransform(from, to, up);
         let Identity = Matrix.Identity();
-        expect(equal(t.get(0, 0), Identity.get(0, 0))).toBeTruthy();
-        expect(equal(t.get(0, 1), Identity.get(0, 1))).toBeTruthy();
-        expect(equal(t.get(0, 2), Identity.get(0, 2))).toBeTruthy();
-        expect(equal(t.get(0, 3), Identity.get(0, 3))).toBeTruthy();
-        expect(equal(t.get(1, 0), Identity.get(1, 0))).toBeTruthy();
-        expect(equal(t.get(1, 1), Identity.get(1, 1))).toBeTruthy();
-        expect(equal(t.get(1, 2), Identity.get(1, 2))).toBeTruthy();
-        expect(equal(t.get(1, 3), Identity.get(1, 3))).toBeTruthy();
-        expect(equal(t.get(2, 0), Identity.get(2, 0))).toBeTruthy();
-        expect(equal(t.get(2, 1), Identity.get(2, 1))).toBeTruthy();
-        expect(equal(t.get(2, 2), Identity.get(2, 2))).toBeTruthy();
-        expect(equal(t.get(2, 3), Identity.get(2, 3))).toBeTruthy();
-        expect(equal(t.get(3, 0), Identity.get(3, 0))).toBeTruthy();
-        expect(equal(t.get(3, 1), Identity.get(3, 1))).toBeTruthy();
-        expect(equal(t.get(3, 2), Identity.get(3, 2))).toBeTruthy();
-        expect(equal(t.get(3, 3), Identity.get(3, 3))).toBeTruthy();
+        expect(Matrix.equal(t, Identity)).toBeTruthy()
     });
     test('A view transformation matrix looking in positive z direction', () => {
         let from: Point = createPoint(0, 0, 0);
@@ -277,22 +262,7 @@ describe('View Transform', () => {
         let up: Vector = createVector(0, 1, 0);
         let t: Matrix = viewTransform(from, to, up);
         let scaleTransform = Transformations.scaling(-1, 1, -1);
-        expect(equal(t.get(0, 0), scaleTransform.get(0, 0))).toBeTruthy();
-        expect(equal(t.get(0, 1), scaleTransform.get(0, 1))).toBeTruthy();
-        expect(equal(t.get(0, 2), scaleTransform.get(0, 2))).toBeTruthy();
-        expect(equal(t.get(0, 3), scaleTransform.get(0, 3))).toBeTruthy();
-        expect(equal(t.get(1, 0), scaleTransform.get(1, 0))).toBeTruthy();
-        expect(equal(t.get(1, 1), scaleTransform.get(1, 1))).toBeTruthy();
-        expect(equal(t.get(1, 2), scaleTransform.get(1, 2))).toBeTruthy();
-        expect(equal(t.get(1, 3), scaleTransform.get(1, 3))).toBeTruthy();
-        expect(equal(t.get(2, 0), scaleTransform.get(2, 0))).toBeTruthy();
-        expect(equal(t.get(2, 1), scaleTransform.get(2, 1))).toBeTruthy();
-        expect(equal(t.get(2, 2), scaleTransform.get(2, 2))).toBeTruthy();
-        expect(equal(t.get(2, 3), scaleTransform.get(2, 3))).toBeTruthy();
-        expect(equal(t.get(3, 0), scaleTransform.get(3, 0))).toBeTruthy();
-        expect(equal(t.get(3, 1), scaleTransform.get(3, 1))).toBeTruthy();
-        expect(equal(t.get(3, 2), scaleTransform.get(3, 2))).toBeTruthy();
-        expect(equal(t.get(3, 3), scaleTransform.get(3, 3))).toBeTruthy();
+        expect(Matrix.equal(t, scaleTransform)).toBeTruthy();
     });
     test('The view transformation moves the world', () => {
         let from: Point = createPoint(0, 0, 8);
@@ -300,22 +270,7 @@ describe('View Transform', () => {
         let up: Vector = createVector(0, 1, 0);
         let t: Matrix = viewTransform(from, to, up);
         let translationTransform = Transformations.translation(0, 0, -8);
-        expect(equal(t.get(0, 0), translationTransform.get(0, 0))).toBeTruthy();
-        expect(equal(t.get(0, 1), translationTransform.get(0, 1))).toBeTruthy();
-        expect(equal(t.get(0, 2), translationTransform.get(0, 2))).toBeTruthy();
-        expect(equal(t.get(0, 3), translationTransform.get(0, 3))).toBeTruthy();
-        expect(equal(t.get(1, 0), translationTransform.get(1, 0))).toBeTruthy();
-        expect(equal(t.get(1, 1), translationTransform.get(1, 1))).toBeTruthy();
-        expect(equal(t.get(1, 2), translationTransform.get(1, 2))).toBeTruthy();
-        expect(equal(t.get(1, 3), translationTransform.get(1, 3))).toBeTruthy();
-        expect(equal(t.get(2, 0), translationTransform.get(2, 0))).toBeTruthy();
-        expect(equal(t.get(2, 1), translationTransform.get(2, 1))).toBeTruthy();
-        expect(equal(t.get(2, 2), translationTransform.get(2, 2))).toBeTruthy();
-        expect(equal(t.get(2, 3), translationTransform.get(2, 3))).toBeTruthy();
-        expect(equal(t.get(3, 0), translationTransform.get(3, 0))).toBeTruthy();
-        expect(equal(t.get(3, 1), translationTransform.get(3, 1))).toBeTruthy();
-        expect(equal(t.get(3, 2), translationTransform.get(3, 2))).toBeTruthy();
-        expect(equal(t.get(3, 3), translationTransform.get(3, 3))).toBeTruthy();
+        expect(Matrix.equal(t, translationTransform)).toBeTruthy();
     });
     test('An arbitrary view transformation', () => {
         let from: Point = createPoint(1, 3, 2);
