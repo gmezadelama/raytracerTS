@@ -31,11 +31,9 @@ export function castRayToRedSphere(): string {
     //     .rotateAroundZ(Math.PI / 4)
     // );
 
-    sphere.setTransform(
-        Transformations.getChainedTransformations(
-            Transformations.shearing(1, 0, 0, 0, 0, 0),
-            Transformations.scaling(0.5, 1, 1)
-        ) 
+    sphere.transform = Transformations.getChainedTransformations(
+        Transformations.shearing(1, 0, 0, 0, 0, 0),
+        Transformations.scaling(0.5, 1, 1)
     );
 
     // scanning each row of pixel in the canvas

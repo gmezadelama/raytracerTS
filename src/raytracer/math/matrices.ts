@@ -144,7 +144,7 @@ export default class Matrix {
         }
         return m;
     }
-    
+
     public static Identity = (dim: number = 4):Matrix => {
         let id = new Matrix(dim, dim);
         for(let i = 0; i < dim; i++) {

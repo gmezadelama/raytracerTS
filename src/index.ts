@@ -3,6 +3,7 @@ import { getClockHoursPositionPPM } from './ppm/clock';
 import { castRayToRedSphere } from './ppm/redSphere';
 import { cast3DSphere } from './ppm/lightingshadingsphere';
 import './sass/styles.scss';
+import { exportScene } from './ppm/firstScene';
 
 let canvas;
 
@@ -15,5 +16,6 @@ window.onload = () => {
     // console.log('Plot: ProjectileSimulation.convertToPPM', getProjectileSimulationPPM());
     // console.log('Plot: ClockHourSimulation.convertToPPM', getClockHoursPositionPPM());
     // console.log('Plot: RedSphere.convertToPPM', castRayToRedSphere());
-    console.log('Plot: 3DSphere.convertToPPM', cast3DSphere());
+    // console.log('Plot: 3DSphere.convertToPPM', cast3DSphere());
+    console.log('Plot: firstScene.convertToPPM', exportScene());
 }
