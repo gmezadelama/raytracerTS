@@ -48,4 +48,6 @@ export default class RTCanvas {
         255
         ${pv}`;
     }
+
+    public getPixelAt = (x: number, y: number): PixelColor => this.matrix[x][y];
 }

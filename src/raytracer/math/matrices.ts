@@ -1,5 +1,6 @@
 import { Tuple } from './tuple';
 import Transformations from '../features/transformations';
+import { equal as equalValues } from './operations';
 
 export default class Matrix {
     private matrix:number[][] = [];
@@ -122,7 +123,7 @@ export default class Matrix {
         }
         for(let i = 0; i < a.getNumCols(); i++) {
             for(let j = 0; j < a.getNumRows(); j++) {
-                if (a.get(i, j) !== b.get(i, j)) {
+                if (!equalValues(a.get(i, j), b.get(i, j))) {
                     return false;
                 }
             }
@@ -143,7 +144,7 @@ export default class Matrix {
         }
         return m;
     }
-    
+
     public static Identity = (dim: number = 4):Matrix => {
         let id = new Matrix(dim, dim);
         for(let i = 0; i < dim; i++) {

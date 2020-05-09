@@ -90,4 +90,14 @@ describe('Lighting test', () => {
     expect(equal(result.y, 0.1)).toBeTruthy();
     expect(equal(result.z, 0.1)).toBeTruthy();
   });
+  test('Lighting with the surface in shadow', () => {
+    let eyev: Vector = createVector(0, 0, -1);
+    let normalv: Vector = createVector(0, 0, -1);
+    let light: Light = new Light(createPoint(0, 0, -10), createPixelColor(1, 1, 1));
+    let inShadow: boolean = true;
+    let result: PixelColor = lighting(m, light, position, eyev, normalv, inShadow);
+    expect(equal(result.x, 0.1)).toBeTruthy();
+    expect(equal(result.y, 0.1)).toBeTruthy();
+    expect(equal(result.z, 0.1)).toBeTruthy();
+  });
 });

@@ -1,4 +1,5 @@
 import Matrix from './matrices';
+import { equal } from './operations';
 
 type wRange = 0 | 1;
 
@@ -65,7 +66,12 @@ export const subtract = (a: Tuple, b: Tuple):Tuple | undefined => {
     }
 };
 
-export const negateVector = (a: Tuple):Tuple | undefined => multiplyScalar(a, -1);
+export const negateVector = (a: Tuple):Tuple | undefined => ({
+    x: a.x === 0 ? 0 : -a.x,
+    y: a.y === 0 ? 0 : -a.y,
+    z: a.z === 0 ? 0 : -a.z,
+    w: 0
+})
 
 export const multiplyScalar = (a: Tuple, s: number):Tuple | undefined => {
     if (a.w === 1) {
@@ -122,3 +128,22 @@ export const matrixToTuple = (m: Matrix):Tuple => ({
     z: m.get(2, 0),
     w: (m.get(3, 0)) as wRange
 })
+
+export const equalTuple = (a: Tuple, b: Tuple): boolean => {
+    return equal(a.x, b.x) && equal(a.y, b.y) && equal(a.z, b.z) && a.w === b.w;
+}
+
+export const equalPoint = (a: Point, b: Point): boolean => {
+    if (a.w !== 1 || b.w !== 1) return false;
+    return equalTuple(a, b);
+}
+
+export const equalVector = (a: Vector, b: Vector): boolean => {
+    if (a.w !== 0 || b.w !== 0) return false;
+    return equalTuple(a, b);
+}
+
+export const equalPixelColor = (a: PixelColor, b: PixelColor): boolean => {
+    if (a.w !== 0 || b.w !== 0) return false;
+    return equalTuple(a, b);
+}
