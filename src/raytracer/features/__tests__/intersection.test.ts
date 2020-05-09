@@ -2,7 +2,9 @@ import { createPoint, createVector } from '../../math/tuple';
 import Sphere from '../../geometry/sphere';
 import Shape from '../../geometry/shape';
 import Ray from '../ray';
-import Intersection from '../intersection';
+import Intersection, { IntersectionComputations } from '../intersection';
+import Transformations from '../transformations';
+import { EPSILON } from '../../math/operations';
 
 describe('Intersections', () => {
   test('Precomputing the state of an intersection', () => {
@@ -49,5 +51,14 @@ describe('Intersections', () => {
     expect(comps.normalv.y).toBe(0);
     expect(comps.normalv.z).toBe(-1);
     expect(comps.normalv.w).toBe(0);
+  });
+  test('The hit should offset the point', () => {
+    let r: Ray = new Ray(createPoint(0, 0, -5), createVector(0, 0, 1));
+    let shape: Shape = new Sphere();
+    shape.transform = Transformations.translation(0, 0, 1);
+    let i: Intersection = new Intersection(5, shape);
+    let comps: IntersectionComputations = Intersection.prepareComputations(i, r);
+    expect(comps.overPoint.z).toBeLessThan(-EPSILON / 2);
+    expect(comps.point.z).toBeGreaterThan(comps.overPoint.z);
   });
 });

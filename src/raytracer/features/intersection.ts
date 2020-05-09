@@ -1,6 +1,7 @@
 import Shape from '../geometry/shape';
-import { Point, Vector, negateVector, dot } from '../math/tuple';
+import { Point, Vector, negateVector, dot, add, multiplyScalar } from '../math/tuple';
 import Ray from './ray';
+import { EPSILON } from '../math/operations';
 
 export interface IntersectionComputations {
     t: number;
@@ -9,6 +10,7 @@ export interface IntersectionComputations {
     eyev: Vector;
     normalv: Vector;
     inside: boolean;
+    overPoint: Point;
 }
 
 export default class Intersection {
@@ -26,6 +28,7 @@ export default class Intersection {
 
     public static hit = (is: Intersection[]): Intersection | undefined => {
         if (!is || is.length === 0) return undefined;
+        // the hit will return the lowest nonnegative 't'
         let hits = is.filter((i: Intersection) => i.t > 0);
         return hits.length > 0
             ? hits.sort((i1: Intersection, i2: Intersection) => i1.t - i2.t)[0]
@@ -47,7 +50,8 @@ export default class Intersection {
             point: point,
             eyev: eyev,
             normalv: normalv,
-            inside: inside
+            inside: inside,
+            overPoint: add(point, multiplyScalar(normalv, EPSILON))
         };
     }
 

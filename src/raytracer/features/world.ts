@@ -2,7 +2,7 @@ import Shape from '../geometry/shape';
 import Light from '../shading/light';
 import Ray from './ray';
 import Intersection, { IntersectionComputations } from './intersection';
-import { PixelColor, createPixelColor } from '../math/tuple';
+import { PixelColor, createPixelColor, Point, vectorMagnitude, subtract, normalize } from '../math/tuple';
 import { lighting } from '../shading/light';
 
 export default class World {
@@ -43,7 +43,8 @@ export default class World {
   }
 
   public shadeHit = (comps: IntersectionComputations): PixelColor => {
-    return lighting(comps.object.material, this._lightSource, comps.point, comps.eyev, comps.normalv);
+    let shadowed: boolean = this.isShadowed(comps.overPoint);
+    return lighting(comps.object.material, this._lightSource, comps.point, comps.eyev, comps.normalv, shadowed);
   }
 
   public colorAt(r: Ray): PixelColor {
@@ -56,5 +57,23 @@ export default class World {
     // calculate color for that hit
     let comps = Intersection.prepareComputations(hit, r);
     return this.shadeHit(comps);
+  }
+
+  public isShadowed = (p: Point): boolean => {
+    let vLightToPoint = subtract(this.lightSource.position, p);
+    let distance = vectorMagnitude(vLightToPoint);
+    let ray = new Ray(p, normalize(vLightToPoint));
+    // get intersections in the world
+    let is: Intersection[] = this.worldIntersection(ray);
+    // calculate the hit
+    let hit: Intersection = Intersection.hit(is);
+    // if there is a hit and the hit is between
+    // the light source and the point (t < distance)
+    // it means that the point is in shadow
+    if (hit && hit.t < distance) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }

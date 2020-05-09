@@ -12,7 +12,7 @@ import Camera from '../camera';
 import { viewTransform } from '../view';
 import RTCanvas from '../../../ppm/rtcanvas';
 
-describe('The default world', () => {
+describe('The default world: intersecting with a ray and color on that point', () => {
   let defaultWorld: World;
   beforeEach(() => {
     defaultWorld = new World();
@@ -34,31 +34,6 @@ describe('The default world', () => {
     expect(equal(xs[1].t, 4.5)).toBeTruthy();
     expect(equal(xs[2].t, 5.5)).toBeTruthy();
     expect(equal(xs[3].t, 6)).toBeTruthy();
-  });
-  test('Shading an intersection', () => {
-    let r: Ray = new Ray(createPoint(0, 0, -5), createVector(0, 0, 1));
-    let shape: Shape = defaultWorld.sceneObjects[0];
-    let i: Intersection = new Intersection(4, shape);
-    let comps: IntersectionComputations = Intersection.prepareComputations(i, r);
-    let c: PixelColor;
-    c = defaultWorld.shadeHit(comps);
-    expect(equal(c.x, 0.38066)).toBeTruthy();
-    expect(equal(c.y, 0.47583)).toBeTruthy();
-    expect(equal(c.z, 0.2855)).toBeTruthy();
-    expect(equal(c.w, 0)).toBeTruthy();
-  });
-  test('Shading an intersection from the inside', () => {
-    defaultWorld.lightSource = new Light(createPoint(0, 0.25, 0), createPixelColor(1, 1, 1));
-    let r: Ray = new Ray(createPoint(0, 0, 0), createVector(0, 0, 1));
-    let shape: Shape = defaultWorld.sceneObjects[1];
-    let i: Intersection = new Intersection(0.5, shape);
-    let comps: IntersectionComputations = Intersection.prepareComputations(i, r);
-    let c: PixelColor;
-    c = defaultWorld.shadeHit(comps);
-    expect(equal(c.x, 0.90498)).toBeTruthy();
-    expect(equal(c.y, 0.90498)).toBeTruthy();
-    expect(equal(c.z, 0.90498)).toBeTruthy();
-    expect(equal(c.w, 0)).toBeTruthy();
   });
   test('The color when a ray misses', () => {
     let r: Ray = new Ray(createPoint(0, 0, -5), createVector(0, 1, 0));
@@ -90,6 +65,64 @@ describe('The default world', () => {
   });
 });
 
+describe('Shading on a point in the default world', () => {
+  let defaultWorld: World;
+  beforeEach(() => {
+    defaultWorld = new World();
+    defaultWorld.lightSource = new Light(createPoint(-10, 10, -10), createPixelColor(1, 1, 1));
+    let s1: Sphere = new Sphere();
+    s1.material = new Material();
+    s1.material.color = createPixelColor(0.8, 1.0, 0.6);
+    s1.material.diffuse = 0.7;
+    s1.material.specular = 0.2;
+    let s2: Sphere = new Sphere();
+    s2.transform = Transformations.scaling(0.5, 0.5, 0.5);
+    defaultWorld.sceneObjects = [s1, s2];
+  })
+  test('Shading an intersection', () => {
+    let r: Ray = new Ray(createPoint(0, 0, -5), createVector(0, 0, 1));
+    let shape: Shape = defaultWorld.sceneObjects[0];
+    let i: Intersection = new Intersection(4, shape);
+    let comps: IntersectionComputations = Intersection.prepareComputations(i, r);
+    let c: PixelColor;
+    c = defaultWorld.shadeHit(comps);
+    expect(equal(c.x, 0.38066)).toBeTruthy();
+    expect(equal(c.y, 0.47583)).toBeTruthy();
+    expect(equal(c.z, 0.2855)).toBeTruthy();
+    expect(equal(c.w, 0)).toBeTruthy();
+  });
+  test('Shading an intersection from the inside', () => {
+    defaultWorld.lightSource = new Light(createPoint(0, 0.25, 0), createPixelColor(1, 1, 1));
+    let r: Ray = new Ray(createPoint(0, 0, 0), createVector(0, 0, 1));
+    let shape: Shape = defaultWorld.sceneObjects[1];
+    let i: Intersection = new Intersection(0.5, shape);
+    let comps: IntersectionComputations = Intersection.prepareComputations(i, r);
+    let c: PixelColor;
+    c = defaultWorld.shadeHit(comps);
+    expect(equal(c.x, 0.90498)).toBeTruthy();
+    expect(equal(c.y, 0.90498)).toBeTruthy();
+    expect(equal(c.z, 0.90498)).toBeTruthy();
+    expect(equal(c.w, 0)).toBeTruthy();
+  });
+  test('Shading when shadeHit is given an intersection in shadow', () => {
+    let anotherWorld = new World();
+    anotherWorld.lightSource = new Light(createPoint(0, 0, -10), createPixelColor(1, 1, 1));
+    let s1: Shape = new Sphere();
+    let s2: Shape = new Sphere();
+    s2.transform = Transformations.translation(0, 0, 10);
+    anotherWorld.addObject(s1);
+    anotherWorld.addObject(s2);
+    let r: Ray = new Ray(createPoint(0, 0, 5), createVector(0, 0, 1));
+    let i: Intersection = new Intersection(4, s2);
+    let comps: IntersectionComputations = Intersection.prepareComputations(i, r);
+    let c: PixelColor = anotherWorld.shadeHit(comps);
+    expect(equal(c.x, 0.1)).toBeTruthy();
+    expect(equal(c.y, 0.1)).toBeTruthy();
+    expect(equal(c.z, 0.1)).toBeTruthy();
+    expect(equal(c.w, 0)).toBeTruthy();
+  });
+});
+
 describe('Rendering a world with the camera', () => {
   let defaultWorld: World;
   beforeEach(() => {
@@ -113,5 +146,37 @@ describe('Rendering a world with the camera', () => {
     let image: RTCanvas = cam.render(defaultWorld);
     let pixelAt: PixelColor = image.getPixelAt(5, 5);
     expect(equalPixelColor(pixelAt, createPixelColor(0.38066, 0.47583, 0.2855))).toBeTruthy();
+  });
+});
+
+describe('Testing for shadows', () => {
+  let defaultWorld: World;
+  beforeEach(() => {
+    defaultWorld = new World();
+    defaultWorld.lightSource = new Light(createPoint(-10, 10, -10), createPixelColor(1, 1, 1));
+    let s1: Sphere = new Sphere();
+    s1.material = new Material();
+    s1.material.color = createPixelColor(0.8, 1.0, 0.6);
+    s1.material.diffuse = 0.7;
+    s1.material.specular = 0.2;
+    let s2: Sphere = new Sphere();
+    s2.transform = Transformations.scaling(0.5, 0.5, 0.5);
+    defaultWorld.sceneObjects = [s1, s2];
+  });
+  test('There is no shadow when nothing is collinear with point and light', () => {
+    let p: Point = createPoint(0, 10, 0);
+    expect(defaultWorld.isShadowed(p)).toBeFalsy();
+  });
+  test('The shadow when an object is between the point and the light', () => {
+    let p: Point = createPoint(10, -10, 10);
+    expect(defaultWorld.isShadowed(p)).toBeTruthy();
+  });
+  test('There is no shadow when an object is behind the light', () => {
+    let p: Point = createPoint(-20, 20, -20);
+    expect(defaultWorld.isShadowed(p)).toBeFalsy();
+  });
+  test('There is no shadow when an object is behind the point', () => {
+    let p: Point = createPoint(-2, 2, -2);
+    expect(defaultWorld.isShadowed(p)).toBeFalsy();
   });
 });

@@ -28,7 +28,7 @@ export default class Light {
 
 export const reflectLight = (inV: Vector, normal: Vector): Vector => subtract(inV, multiplyScalar(normal, 2 * dot(inV, normal)))
 
-export const lighting = (m: Material, l: Light, point: Point, eyev: Vector, normalv: Vector): PixelColor => {
+export const lighting = (m: Material, l: Light, point: Point, eyev: Vector, normalv: Vector, inShadow: boolean = false): PixelColor => {
   let ambient: PixelColor = createPixelColor(0, 0, 0);
   let diffuse: PixelColor = createPixelColor(0, 0, 0);
   let specular: PixelColor = createPixelColor(0, 0, 0);
@@ -40,6 +40,11 @@ export const lighting = (m: Material, l: Light, point: Point, eyev: Vector, norm
 
   // compute the ambient contribution
   ambient = multiplyScalar(effectiveColor, m.ambient);
+
+  // when a point is in shadow, the diffuse and specular components are ignored
+  if (inShadow) return ambient;
+
+  // when the point is not in shadow:
 
   // lightDotNormal represents the cosine of the angle between the
   // light vector and the normal vector. A negative number means the
