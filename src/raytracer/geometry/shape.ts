@@ -1,21 +1,43 @@
 import Ray from '../features/ray';
-import { Point, Vector } from '../math/tuple';
+import { Point, Vector, matrixToTuple, normalize, createPoint } from '../math/tuple';
 import Intersection from '../features/intersection';
 import Matrix from '../math/matrices';
 import Material from '../shading/material';
 
 export default abstract class Shape {
-    private id: number;
+    private _id: number;
+    protected origin: Point;
     private _transform: Matrix;
     private _material: Material;
     constructor() {
-        this.id = (new Date()).getTime();
+        this._id = (new Date()).getTime();
         this._transform = Matrix.Identity();
         this._material = new Material();
+        this.origin = createPoint(0, 0, 0);
     }
     public equals = (o: Shape) => this.id === o.id;
-    public abstract intersect(r: Ray): Intersection[];
-    public abstract normalAt(p: Point): Vector;
+    protected abstract localIntersect(localRay: Ray): Intersection[];
+    protected abstract localNormalAt(p: Point): Vector;
+
+    public intersect = (r: Ray): Intersection[] => {
+        let localRay = r.transformRay(Matrix.inverse(this.transform));
+        return this.localIntersect(localRay);
+    }
+
+    public normalAt = (worldPoint: Point): Vector => {
+        // There are some shapes like the unit sphere where the vector
+        // will be normalized by default but the calculation
+        // is still indicated for any other shape.
+        let localPoint: Point = matrixToTuple(Matrix.multiply(Matrix.inverse(this.transform), Matrix.tupleToMatrix(worldPoint)));
+        let objectNormal: Vector = this.localNormalAt(localPoint);
+        let worldNormal: Vector = matrixToTuple(Matrix.multiply(Matrix.inverse(this.transform).transpose(), Matrix.tupleToMatrix(objectNormal)));
+        worldNormal.w = 0;
+        return normalize(worldNormal);
+    }
+
+    get id(): Number {
+        return this._id;
+    }
 
     get transform(): Matrix {
         return this._transform;

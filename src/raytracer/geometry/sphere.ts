@@ -5,7 +5,6 @@ import Shape from './shape';
 import Matrix from '../math/matrices';
 
 export default class Sphere extends Shape {
-    private origin: Point;
     private radius: number;
     constructor() {
         super();
@@ -13,12 +12,11 @@ export default class Sphere extends Shape {
         this.radius = 1;
     }
 
-    public intersect = (r: Ray): Intersection[] => {
-        let r2 = r.transformRay(Matrix.inverse(this.transform));
+    protected localIntersect = (localRay: Ray): Intersection[] => {
         const {
             origin: rayOrigin,
             direction: rayDirection
-        } = r2.getValues();
+        } = localRay.getValues();
         let sphereToRay: Vector = subtract(rayOrigin, this.origin);
         let a = dot(rayDirection, rayDirection);
         let b = 2 * dot(rayDirection, sphereToRay);
@@ -35,15 +33,7 @@ export default class Sphere extends Shape {
         }
     }
 
-    public normalAt = (worldPoint: Point): Vector => {
-        // Since it's a unit sphere the vector will
-        // be normalized by default but the calculation
-        // is still indicated.
-        let objectPoint: Point = matrixToTuple(Matrix.multiply(Matrix.inverse(this.transform), Matrix.tupleToMatrix(worldPoint)));
-        let objectNormal: Vector = subtract(objectPoint, createPoint(0, 0, 0));
-        let worldNormal: Vector = matrixToTuple(Matrix.multiply(Matrix.inverse(this.transform).transpose(), Matrix.tupleToMatrix(objectNormal)));
-        worldNormal.w = 0;
-        return normalize(worldNormal);
+    protected localNormalAt = (localPoint: Point): Vector => {
+        return subtract(localPoint, createPoint(0, 0, 0));
     }
-
 }
