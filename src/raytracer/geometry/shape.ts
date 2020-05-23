@@ -19,6 +19,8 @@ export default abstract class Shape {
     protected abstract localIntersect(localRay: Ray): Intersection[];
     protected abstract localNormalAt(p: Point): Vector;
 
+    public localPoint = (worldPoint: Point): Point => matrixToTuple(Matrix.multiply(Matrix.inverse(this._transform), Matrix.tupleToMatrix(worldPoint)));
+
     public intersect = (r: Ray): Intersection[] => {
         let localRay = r.transformRay(Matrix.inverse(this.transform));
         return this.localIntersect(localRay);
@@ -28,7 +30,7 @@ export default abstract class Shape {
         // There are some shapes like the unit sphere where the vector
         // will be normalized by default but the calculation
         // is still indicated for any other shape.
-        let localPoint: Point = matrixToTuple(Matrix.multiply(Matrix.inverse(this.transform), Matrix.tupleToMatrix(worldPoint)));
+        let localPoint: Point = this.localPoint(worldPoint);
         let objectNormal: Vector = this.localNormalAt(localPoint);
         let worldNormal: Vector = matrixToTuple(Matrix.multiply(Matrix.inverse(this.transform).transpose(), Matrix.tupleToMatrix(objectNormal)));
         worldNormal.w = 0;

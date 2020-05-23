@@ -1,4 +1,5 @@
 import { PixelColor, createPixelColor } from "../math/tuple";
+import { Pattern } from "../features/pattern";
 
 export default class Material {
   private _color: PixelColor;
@@ -6,12 +7,14 @@ export default class Material {
   private _diffuse: number;
   private _specular: number;
   private _shininess: number;
+  private _pattern: Pattern;
   constructor() {
     this._color = createPixelColor(1, 1, 1);
     this._ambient = 0.1;
     this._diffuse = 0.9;
     this._specular = 0.9;
     this._shininess = 200.0;
+    this._pattern = null;
   }
 
   get color(): PixelColor {
@@ -56,5 +59,13 @@ export default class Material {
   set shininess(s: number) {
     if (s < 0) return;
     this._shininess = s;
+  }
+
+  get pattern(): Pattern {
+    return this._pattern;
+  }
+
+  set pattern(p: Pattern) {
+    this._pattern = p;
   }
 }

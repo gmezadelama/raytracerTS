@@ -32,8 +32,17 @@ export const lighting = (m: Material, l: Light, point: Point, eyev: Vector, norm
   let ambient: PixelColor = createPixelColor(0, 0, 0);
   let diffuse: PixelColor = createPixelColor(0, 0, 0);
   let specular: PixelColor = createPixelColor(0, 0, 0);
+
+  let color: PixelColor;
+  // if material has a pattern, use pattern color at point, otherwise use material's color
+  if (!!m.pattern) {
+    color = m.pattern.setPatternAtPoint(point);
+  } else {
+    color = m.color;
+  }
+
   // combine the surface color with the light's color/intensity
-  let effectiveColor: PixelColor = hadamardProduct(m.color, l.intensity);
+  let effectiveColor: PixelColor = hadamardProduct(color, l.intensity);
 
   // find the direction to the light surface
   let lightv: Vector = normalize(subtract(l.position, point));
