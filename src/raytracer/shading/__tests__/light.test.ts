@@ -1,7 +1,8 @@
-import { PixelColor, Point, createPixelColor, createPoint, createVector, Vector } from "../../math/tuple";
+import { PixelColor, Point, createPixelColor, createPoint, createVector, Vector, equalPixelColor } from "../../math/tuple";
 import Light, { lighting, reflectLight } from "../light";
 import Material from "../material";
 import { equal } from "../../math/operations";
+import { StripePattern, WhitePattern, BlackPattern } from "../../features/pattern";
 
 describe('Light testing', () => {
   test('A point light has a position and intensity', () => {
@@ -99,5 +100,22 @@ describe('Lighting test', () => {
     expect(equal(result.x, 0.1)).toBeTruthy();
     expect(equal(result.y, 0.1)).toBeTruthy();
     expect(equal(result.z, 0.1)).toBeTruthy();
+  });
+});
+
+describe('testing lighting with patterns applied', () => {
+  test('Light with a stripe pattern applied', () => {
+    let m: Material = new Material();
+    m.pattern = new StripePattern(WhitePattern, BlackPattern);
+    m.ambient = 1;
+    m.diffuse = 0;
+    m.specular = 0;
+    let eyev: Vector = createVector(0, 0, -1);
+    let normalv: Vector = createVector(0, 0, -1);
+    let light: Light = new Light(createPoint(0, 0, -10), createPixelColor(1, 1, 1));
+    let c1: PixelColor = lighting(m, light, createPoint(0.9, 0, 0), eyev, normalv, false);
+    let c2: PixelColor = lighting(m, light, createPoint(1.1, 0, 0), eyev, normalv, false);
+    expect(equalPixelColor(WhitePattern, c1)).toBeTruthy();
+    expect(equalPixelColor(BlackPattern, c2)).toBeTruthy();
   });
 });
