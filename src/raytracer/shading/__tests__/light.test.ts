@@ -3,6 +3,7 @@ import Light, { lighting, reflectLight } from "../light";
 import Material from "../material";
 import { equal } from "../../math/operations";
 import { StripePattern, WhitePattern, BlackPattern } from "../../features/pattern";
+import Sphere from "../../geometry/sphere";
 
 describe('Light testing', () => {
   test('A point light has a position and intensity', () => {
@@ -50,7 +51,7 @@ describe('Lighting test', () => {
     let eyev: Vector = createVector(0, 0, -1);
     let normalv: Vector = createVector(0, 0, -1);
     let light: Light = new Light(createPoint(0, 0, -10), createPixelColor(1, 1, 1));
-    let result: PixelColor = lighting(m, light, position, eyev, normalv);
+    let result: PixelColor = lighting(m, new Sphere(), light, position, eyev, normalv);
     expect(equal(result.x, 1.9)).toBeTruthy();
     expect(equal(result.y, 1.9)).toBeTruthy();
     expect(equal(result.z, 1.9)).toBeTruthy();
@@ -59,7 +60,7 @@ describe('Lighting test', () => {
     let eyev: Vector = createVector(0, Math.SQRT2 / 2, -Math.SQRT2 / 2);
     let normalv: Vector = createVector(0, 0, -1);
     let light: Light = new Light(createPoint(0, 0, -10), createPixelColor(1, 1, 1));
-    let result: PixelColor = lighting(m, light, position, eyev, normalv);
+    let result: PixelColor = lighting(m, new Sphere(), light, position, eyev, normalv);
     expect(equal(result.x, 1.0)).toBeTruthy();
     expect(equal(result.y, 1.0)).toBeTruthy();
     expect(equal(result.z, 1.0)).toBeTruthy();
@@ -68,7 +69,7 @@ describe('Lighting test', () => {
     let eyev: Vector = createVector(0, 0, -1);
     let normalv: Vector = createVector(0, 0, -1);
     let light: Light = new Light(createPoint(0, 10, -10), createPixelColor(1, 1, 1));
-    let result: PixelColor = lighting(m, light, position, eyev, normalv);
+    let result: PixelColor = lighting(m, new Sphere(), light, position, eyev, normalv);
     expect(equal(result.x, 0.7364)).toBeTruthy();
     expect(equal(result.y, 0.7364)).toBeTruthy();
     expect(equal(result.z, 0.7364)).toBeTruthy();
@@ -77,7 +78,7 @@ describe('Lighting test', () => {
     let eyev: Vector = createVector(0, -Math.SQRT2 / 2, -Math.SQRT2 / 2);
     let normalv: Vector = createVector(0, 0, -1);
     let light: Light = new Light(createPoint(0, 10, -10), createPixelColor(1, 1, 1));
-    let result: PixelColor = lighting(m, light, position, eyev, normalv);
+    let result: PixelColor = lighting(m, new Sphere(), light, position, eyev, normalv);
     expect(equal(result.x, 1.6364)).toBeTruthy();
     expect(equal(result.y, 1.6364)).toBeTruthy();
     expect(equal(result.z, 1.6364)).toBeTruthy();
@@ -86,7 +87,7 @@ describe('Lighting test', () => {
     let eyev: Vector = createVector(0, 0, -1);
     let normalv: Vector = createVector(0, 0, -1);
     let light: Light = new Light(createPoint(0, 0, 10), createPixelColor(1, 1, 1));
-    let result: PixelColor = lighting(m, light, position, eyev, normalv);
+    let result: PixelColor = lighting(m, new Sphere(), light, position, eyev, normalv);
     expect(equal(result.x, 0.1)).toBeTruthy();
     expect(equal(result.y, 0.1)).toBeTruthy();
     expect(equal(result.z, 0.1)).toBeTruthy();
@@ -96,7 +97,7 @@ describe('Lighting test', () => {
     let normalv: Vector = createVector(0, 0, -1);
     let light: Light = new Light(createPoint(0, 0, -10), createPixelColor(1, 1, 1));
     let inShadow: boolean = true;
-    let result: PixelColor = lighting(m, light, position, eyev, normalv, inShadow);
+    let result: PixelColor = lighting(m, new Sphere(), light, position, eyev, normalv, inShadow);
     expect(equal(result.x, 0.1)).toBeTruthy();
     expect(equal(result.y, 0.1)).toBeTruthy();
     expect(equal(result.z, 0.1)).toBeTruthy();
@@ -113,8 +114,8 @@ describe('testing lighting with patterns applied', () => {
     let eyev: Vector = createVector(0, 0, -1);
     let normalv: Vector = createVector(0, 0, -1);
     let light: Light = new Light(createPoint(0, 0, -10), createPixelColor(1, 1, 1));
-    let c1: PixelColor = lighting(m, light, createPoint(0.9, 0, 0), eyev, normalv, false);
-    let c2: PixelColor = lighting(m, light, createPoint(1.1, 0, 0), eyev, normalv, false);
+    let c1: PixelColor = lighting(m, new Sphere(), light, createPoint(0.9, 0, 0), eyev, normalv, false);
+    let c2: PixelColor = lighting(m, new Sphere(), light, createPoint(1.1, 0, 0), eyev, normalv, false);
     expect(equalPixelColor(WhitePattern, c1)).toBeTruthy();
     expect(equalPixelColor(BlackPattern, c2)).toBeTruthy();
   });

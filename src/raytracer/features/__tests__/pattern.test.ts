@@ -1,14 +1,14 @@
-import { StripePattern, WhitePattern, BlackPattern, Pattern } from "../pattern";
+import { StripePattern, WhitePattern, BlackPattern, Pattern, GradientPattern, RingPattern, CheckersPattern } from "../pattern";
 import Sphere from "../../geometry/sphere";
-import { equalPixelColor, createPoint, PixelColor } from "../../math/tuple";
+import { equalPixelColor, createPoint, PixelColor, createPixelColor } from "../../math/tuple";
 import Shape from "../../geometry/shape";
 import Transformations from "../transformations";
 
-describe('testing stripe patterns', () => {
+describe('testing stripe pattern', () => {
   let pattern: StripePattern;
   beforeAll(() => {
     pattern = new StripePattern(WhitePattern, BlackPattern);
-  }); 
+  });
   test('A stripe pattern is constant in y', () => {
     let p000 = createPoint(0, 0, 0);
     let p010 = createPoint(0, 1, 0);
@@ -63,3 +63,95 @@ describe('testing stripe patterns', () => {
   });
 });
 
+describe('testing gradient pattern', () => {
+  test('a gradient linearly interpolates between colors', () => {
+    let pattern: Pattern = new GradientPattern(WhitePattern, BlackPattern);
+    expect(equalPixelColor(
+      WhitePattern,
+      pattern.setPatternAtPoint(createPoint(0, 0, 0))
+    )).toBeTruthy();
+    expect(equalPixelColor(
+      createPixelColor(0.75, 0.75, 0.75),
+      pattern.setPatternAtPoint(createPoint(0.25, 0, 0))
+    )).toBeTruthy();
+    expect(equalPixelColor(
+      createPixelColor(0.5, 0.5, 0.5),
+      pattern.setPatternAtPoint(createPoint(0.5, 0, 0))
+    )).toBeTruthy();
+    expect(equalPixelColor(
+      createPixelColor(0.25, 0.25, 0.25),
+      pattern.setPatternAtPoint(createPoint(0.75, 0, 0))
+    )).toBeTruthy();
+  });
+});
+
+describe('testing ring pattern', () => {
+  test('a ring should extend in both x and z', () => {
+    let pattern: Pattern = new RingPattern(WhitePattern, BlackPattern);
+    expect(equalPixelColor(
+      WhitePattern,
+      pattern.setPatternAtPoint(createPoint(0, 0, 0))
+    )).toBeTruthy();
+    expect(equalPixelColor(
+      BlackPattern,
+      pattern.setPatternAtPoint(createPoint(1, 0, 0))
+    )).toBeTruthy();
+    expect(equalPixelColor(
+      BlackPattern,
+      pattern.setPatternAtPoint(createPoint(0, 0, 1))
+    )).toBeTruthy();
+    expect(equalPixelColor(
+      BlackPattern,
+      pattern.setPatternAtPoint(createPoint(0.708, 0, 0.708))
+    )).toBeTruthy();
+  });
+});
+
+describe('testing checkers pattern', () => {
+  let pattern: Pattern;
+  beforeAll(() => {
+    pattern = new CheckersPattern(WhitePattern, BlackPattern);
+  });
+  test('checkers should repeat in x', () => {
+    expect(equalPixelColor(
+      WhitePattern,
+      pattern.setPatternAtPoint(createPoint(0, 0, 0))
+    )).toBeTruthy();
+    expect(equalPixelColor(
+      WhitePattern,
+      pattern.setPatternAtPoint(createPoint(0.99, 0, 0))
+    )).toBeTruthy();
+    expect(equalPixelColor(
+      BlackPattern,
+      pattern.setPatternAtPoint(createPoint(1.01, 0, 0))
+    )).toBeTruthy();
+  });
+  test('checkers should repeat in y', () => {
+    expect(equalPixelColor(
+      WhitePattern,
+      pattern.setPatternAtPoint(createPoint(0, 0, 0))
+    )).toBeTruthy();
+    expect(equalPixelColor(
+      WhitePattern,
+      pattern.setPatternAtPoint(createPoint(0, 0.99, 0))
+    )).toBeTruthy();
+    expect(equalPixelColor(
+      BlackPattern,
+      pattern.setPatternAtPoint(createPoint(0, 1.01, 0))
+    )).toBeTruthy();
+  });
+  test('checkers should repeat in z', () => {
+    expect(equalPixelColor(
+      WhitePattern,
+      pattern.setPatternAtPoint(createPoint(0, 0, 0))
+    )).toBeTruthy();
+    expect(equalPixelColor(
+      WhitePattern,
+      pattern.setPatternAtPoint(createPoint(0, 0, 0.99))
+    )).toBeTruthy();
+    expect(equalPixelColor(
+      BlackPattern,
+      pattern.setPatternAtPoint(createPoint(0, 0, 1.01))
+    )).toBeTruthy();
+  });
+});
