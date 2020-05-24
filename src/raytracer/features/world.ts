@@ -44,7 +44,7 @@ export default class World {
 
   public shadeHit = (comps: IntersectionComputations): PixelColor => {
     let shadowed: boolean = this.isShadowed(comps.overPoint);
-    return lighting(comps.object.material, this._lightSource, comps.point, comps.eyev, comps.normalv, shadowed);
+    return lighting(comps.object.material, comps.object, this._lightSource, comps.point, comps.eyev, comps.normalv, shadowed);
   }
 
   public colorAt(r: Ray): PixelColor {

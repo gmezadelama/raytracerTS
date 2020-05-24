@@ -1,5 +1,6 @@
-import { Point, PixelColor, Vector, createPixelColor, multiplyScalar, hadamardProduct, normalize, subtract, dot, negateVector, add } from "../math/tuple";
+import { Point, PixelColor, Vector, createPixelColor, multiplyScalar, hadamardProduct, normalize, subtract, dot, negateVector, add, vectorMagnitude } from "../math/tuple";
 import Material from "./material";
+import Shape from "../geometry/shape";
 
 export default class Light {
   private _position: Point;
@@ -28,7 +29,7 @@ export default class Light {
 
 export const reflectLight = (inV: Vector, normal: Vector): Vector => subtract(inV, multiplyScalar(normal, 2 * dot(inV, normal)))
 
-export const lighting = (m: Material, l: Light, point: Point, eyev: Vector, normalv: Vector, inShadow: boolean = false): PixelColor => {
+export const lighting = (m: Material, obj: Shape, l: Light, point: Point, eyev: Vector, normalv: Vector, inShadow: boolean = false): PixelColor => {
   let ambient: PixelColor = createPixelColor(0, 0, 0);
   let diffuse: PixelColor = createPixelColor(0, 0, 0);
   let specular: PixelColor = createPixelColor(0, 0, 0);
@@ -36,7 +37,11 @@ export const lighting = (m: Material, l: Light, point: Point, eyev: Vector, norm
   let color: PixelColor;
   // if material has a pattern, use pattern color at point, otherwise use material's color
   if (!!m.pattern) {
-    color = m.pattern.setPatternAtPoint(point);
+    if (!!obj) {
+      color = m.pattern.setPatternAtShape(obj, point);
+    } else {
+      color = m.pattern.setPatternAtPoint(point);
+    }
   } else {
     color = m.color;
   }
@@ -44,8 +49,12 @@ export const lighting = (m: Material, l: Light, point: Point, eyev: Vector, norm
   // combine the surface color with the light's color/intensity
   let effectiveColor: PixelColor = hadamardProduct(color, l.intensity);
 
+  let vectorLightPoint: Vector = subtract(l.position, point);
+
+  // if the point is the same that the light position return black color
+  if (vectorMagnitude(vectorLightPoint) === 0) return createPixelColor(0, 0, 0);
   // find the direction to the light surface
-  let lightv: Vector = normalize(subtract(l.position, point));
+  let lightv: Vector = normalize(vectorLightPoint);
 
   // compute the ambient contribution
   ambient = multiplyScalar(effectiveColor, m.ambient);
