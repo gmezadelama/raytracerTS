@@ -2,7 +2,7 @@ import Shape from '../geometry/shape';
 import Light from '../shading/light';
 import Ray from './ray';
 import Intersection, { IntersectionComputations } from './intersection';
-import { PixelColor, createPixelColor, Point, vectorMagnitude, subtract, normalize } from '../math/tuple';
+import { PixelColor, createPixelColor, Point, vectorMagnitude, subtract, normalize, multiplyScalar, add } from '../math/tuple';
 import { lighting } from '../shading/light';
 
 export default class World {
@@ -42,12 +42,14 @@ export default class World {
     return is;
   }
 
-  public shadeHit = (comps: IntersectionComputations): PixelColor => {
+  public shadeHit = (comps: IntersectionComputations, remaining: number = 4): PixelColor => {
     let shadowed: boolean = this.isShadowed(comps.overPoint);
-    return lighting(comps.object.material, comps.object, this._lightSource, comps.point, comps.eyev, comps.normalv, shadowed);
+    let surfaceColor: PixelColor = lighting(comps.object.material, comps.object, this._lightSource, comps.point, comps.eyev, comps.normalv, shadowed);
+    let reflectedColor: PixelColor = this.reflectedColor(comps, remaining);
+    return add(surfaceColor, reflectedColor);
   }
 
-  public colorAt(r: Ray): PixelColor {
+  public colorAt(r: Ray, remaining: number = 4): PixelColor {
     // get intersections in the world
     let is: Intersection[] = this.worldIntersection(r);
     // calculate the hit
@@ -56,7 +58,7 @@ export default class World {
     if (!hit) return createPixelColor(0, 0, 0);
     // calculate color for that hit
     let comps = Intersection.prepareComputations(hit, r);
-    return this.shadeHit(comps);
+    return this.shadeHit(comps, remaining);
   }
 
   public isShadowed = (p: Point): boolean => {
@@ -74,6 +76,16 @@ export default class World {
       return true;
     } else {
       return false;
+    }
+  }
+
+  public reflectedColor = (comps: IntersectionComputations, remaining: number = 4): PixelColor => {
+    if (remaining <= 0 || comps.object.material.reflective === 0) {
+      return createPixelColor(0, 0, 0);
+    } else {
+      let reflectRay: Ray = new Ray(comps.overPoint, comps.reflectv);
+      let color: PixelColor = this.colorAt(reflectRay, remaining - 1);
+      return multiplyScalar(color, comps.object.material.reflective);
     }
   }
 }

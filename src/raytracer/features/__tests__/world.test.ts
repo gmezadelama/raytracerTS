@@ -11,20 +11,26 @@ import Intersection, { IntersectionComputations } from '../intersection';
 import Camera from '../camera';
 import { viewTransform } from '../view';
 import RTCanvas from '../../../ppm/rtcanvas';
+import Plane from '../../geometry/plane';
+
+const createDefaultWorld = (): World => {
+  let defaultWorld = new World();
+  defaultWorld.lightSource = new Light(createPoint(-10, 10, -10), createPixelColor(1, 1, 1));
+  let s1: Sphere = new Sphere();
+  s1.material = new Material();
+  s1.material.color = createPixelColor(0.8, 1.0, 0.6);
+  s1.material.diffuse = 0.7;
+  s1.material.specular = 0.2;
+  let s2: Sphere = new Sphere();
+  s2.transform = Transformations.scaling(0.5, 0.5, 0.5);
+  defaultWorld.sceneObjects = [s1, s2];
+  return defaultWorld;
+}
 
 describe('The default world: intersecting with a ray and color on that point', () => {
   let defaultWorld: World;
   beforeEach(() => {
-    defaultWorld = new World();
-    defaultWorld.lightSource = new Light(createPoint(-10, 10, -10), createPixelColor(1, 1, 1));
-    let s1: Sphere = new Sphere();
-    s1.material = new Material();
-    s1.material.color = createPixelColor(0.8, 1.0, 0.6);
-    s1.material.diffuse = 0.7;
-    s1.material.specular = 0.2;
-    let s2: Sphere = new Sphere();
-    s2.transform = Transformations.scaling(0.5, 0.5, 0.5);
-    defaultWorld.sceneObjects = [s1, s2];
+    defaultWorld = createDefaultWorld();
   });
   test('intersect a world with a ray', () => {
     let r: Ray = new Ray(createPoint(0, 0, -5), createVector(0, 0, 1));
@@ -68,17 +74,8 @@ describe('The default world: intersecting with a ray and color on that point', (
 describe('Shading on a point in the default world', () => {
   let defaultWorld: World;
   beforeEach(() => {
-    defaultWorld = new World();
-    defaultWorld.lightSource = new Light(createPoint(-10, 10, -10), createPixelColor(1, 1, 1));
-    let s1: Sphere = new Sphere();
-    s1.material = new Material();
-    s1.material.color = createPixelColor(0.8, 1.0, 0.6);
-    s1.material.diffuse = 0.7;
-    s1.material.specular = 0.2;
-    let s2: Sphere = new Sphere();
-    s2.transform = Transformations.scaling(0.5, 0.5, 0.5);
-    defaultWorld.sceneObjects = [s1, s2];
-  })
+    defaultWorld = createDefaultWorld();
+  });
   test('Shading an intersection', () => {
     let r: Ray = new Ray(createPoint(0, 0, -5), createVector(0, 0, 1));
     let shape: Shape = defaultWorld.sceneObjects[0];
@@ -126,16 +123,7 @@ describe('Shading on a point in the default world', () => {
 describe('Rendering a world with the camera', () => {
   let defaultWorld: World;
   beforeEach(() => {
-    defaultWorld = new World();
-    defaultWorld.lightSource = new Light(createPoint(-10, 10, -10), createPixelColor(1, 1, 1));
-    let s1: Sphere = new Sphere();
-    s1.material = new Material();
-    s1.material.color = createPixelColor(0.8, 1.0, 0.6);
-    s1.material.diffuse = 0.7;
-    s1.material.specular = 0.2;
-    let s2: Sphere = new Sphere();
-    s2.transform = Transformations.scaling(0.5, 0.5, 0.5);
-    defaultWorld.sceneObjects = [s1, s2];
+    defaultWorld = createDefaultWorld();
   });
   test('Rendering default world', () => {
     let cam: Camera = new Camera(11, 11, Math.PI / 2);
@@ -152,16 +140,7 @@ describe('Rendering a world with the camera', () => {
 describe('Testing for shadows', () => {
   let defaultWorld: World;
   beforeEach(() => {
-    defaultWorld = new World();
-    defaultWorld.lightSource = new Light(createPoint(-10, 10, -10), createPixelColor(1, 1, 1));
-    let s1: Sphere = new Sphere();
-    s1.material = new Material();
-    s1.material.color = createPixelColor(0.8, 1.0, 0.6);
-    s1.material.diffuse = 0.7;
-    s1.material.specular = 0.2;
-    let s2: Sphere = new Sphere();
-    s2.transform = Transformations.scaling(0.5, 0.5, 0.5);
-    defaultWorld.sceneObjects = [s1, s2];
+    defaultWorld = createDefaultWorld();
   });
   test('There is no shadow when nothing is collinear with point and light', () => {
     let p: Point = createPoint(0, 10, 0);
@@ -178,5 +157,53 @@ describe('Testing for shadows', () => {
   test('There is no shadow when an object is behind the point', () => {
     let p: Point = createPoint(-2, 2, -2);
     expect(defaultWorld.isShadowed(p)).toBeFalsy();
+  });
+});
+
+describe('Striking reflective and nonreflective surfaces', () => {
+  let defaultWorld: World;
+  beforeEach(() => {
+    defaultWorld = createDefaultWorld();
+  });
+  test('the reflected color for a nonreflective material', () => {
+    let shape: Shape = defaultWorld.sceneObjects[1];
+    shape.material.ambient = 1;
+    let r: Ray = new Ray(createPoint(0, 0, 0), createVector(0, 0, 1));
+    let i: Intersection = new Intersection(1, shape);
+    let comps: IntersectionComputations = Intersection.prepareComputations(i, r);
+    let color: PixelColor = defaultWorld.reflectedColor(comps);
+    expect(equalPixelColor(createPixelColor(0, 0, 0), color)).toBeTruthy();
+  });
+  test('the reflected color for a reflective material', () => {
+    let shape: Shape = new Plane();
+    shape.material.reflective = 0.5;
+    shape.transform = Transformations.translation(0, -1, 0);
+    defaultWorld.addObject(shape);
+    let r: Ray = new Ray(createPoint(0, 0, -3), createVector(0, -Math.SQRT2 / 2, Math.SQRT2 / 2));
+    let i: Intersection = new Intersection(Math.SQRT2, shape);
+    let comps: IntersectionComputations = Intersection.prepareComputations(i, r);
+    let color: PixelColor = defaultWorld.reflectedColor(comps);
+    expect(
+      equalPixelColor(
+        createPixelColor(0.19033, 0.23791, 0.142749),
+        color
+      )
+    ).toBeTruthy();
+  });
+  test('shade hit with a reflective material', () => {
+    let shape: Shape = new Plane();
+    shape.material.reflective = 0.5;
+    shape.transform = Transformations.translation(0, -1, 0);
+    defaultWorld.addObject(shape);
+    let r: Ray = new Ray(createPoint(0, 0, -3), createVector(0, -Math.SQRT2 / 2, Math.SQRT2 / 2));
+    let i: Intersection = new Intersection(Math.SQRT2, shape);
+    let comps: IntersectionComputations = Intersection.prepareComputations(i, r);
+    let color: PixelColor = defaultWorld.shadeHit(comps);
+    expect(
+      equalPixelColor(
+        createPixelColor(0.87675, 0.92434, 0.82917),
+        color
+      )
+    ).toBeTruthy();
   });
 });

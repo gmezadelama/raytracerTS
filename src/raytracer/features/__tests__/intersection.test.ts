@@ -1,10 +1,11 @@
-import { createPoint, createVector } from '../../math/tuple';
+import { createPoint, createVector, equalVector } from '../../math/tuple';
 import Sphere from '../../geometry/sphere';
 import Shape from '../../geometry/shape';
 import Ray from '../ray';
 import Intersection, { IntersectionComputations } from '../intersection';
 import Transformations from '../transformations';
 import { EPSILON } from '../../math/operations';
+import Plane from '../../geometry/plane';
 
 describe('Intersections', () => {
   test('Precomputing the state of an intersection', () => {
@@ -60,5 +61,12 @@ describe('Intersections', () => {
     let comps: IntersectionComputations = Intersection.prepareComputations(i, r);
     expect(comps.overPoint.z).toBeLessThan(-EPSILON / 2);
     expect(comps.point.z).toBeGreaterThan(comps.overPoint.z);
+  });
+  test('Precomputing the reflection vector', () => {
+    let shape: Shape = new Plane();
+    let r: Ray = new Ray(createPoint(0, 1, -1), createVector(0, -Math.SQRT2 / 2, Math.SQRT2 / 2));
+    let i: Intersection = new Intersection(Math.SQRT2, shape);
+    let comps: IntersectionComputations = Intersection.prepareComputations(i, r);
+    expect(equalVector(comps.reflectv, createVector(0, Math.SQRT2 / 2, Math.SQRT2 / 2))).toBeTruthy();
   });
 });

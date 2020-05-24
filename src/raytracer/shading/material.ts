@@ -8,6 +8,7 @@ export default class Material {
   private _specular: number;
   private _shininess: number;
   private _pattern: Pattern;
+  private _reflective: number;
   constructor() {
     this._color = createPixelColor(1, 1, 1);
     this._ambient = 0.1;
@@ -15,6 +16,7 @@ export default class Material {
     this._specular = 0.9;
     this._shininess = 200.0;
     this._pattern = null;
+    this._reflective = 0;
   }
 
   get color(): PixelColor {
@@ -67,5 +69,13 @@ export default class Material {
 
   set pattern(p: Pattern) {
     this._pattern = p;
+  }
+
+  get reflective(): number {
+    return this._reflective;
+  }
+
+  set reflective(r: number) {
+    this._reflective = r;
   }
 }

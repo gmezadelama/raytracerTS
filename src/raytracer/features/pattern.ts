@@ -16,11 +16,11 @@ export abstract class Pattern {
     this._transform = Matrix.Identity();
   }
 
-  public get transform():Matrix {
+  get transform():Matrix {
     return this._transform;
   }
 
-  public set transform(t:Matrix) {
+  set transform(t:Matrix) {
     this._transform = t;
   }
 
@@ -43,11 +43,11 @@ export class StripePattern extends Pattern {
     this._b = colors[1];
   }
 
-  public get a() {
+  get a() {
     return this._a;
   }
 
-  public get b() {
+  get b() {
     return this._b;
   }
 
@@ -66,11 +66,11 @@ export class GradientPattern extends Pattern {
     this._b = colors[1];
   }
 
-  public get a() {
+  get a() {
     return this._a;
   }
 
-  public get b() {
+  get b() {
     return this._b;
   }
 
@@ -91,11 +91,11 @@ export class RingPattern extends Pattern {
     this._b = colors[1];
   }
 
-  public get a() {
+  get a() {
     return this._a;
   }
 
-  public get b() {
+  get b() {
     return this._b;
   }
 
@@ -118,11 +118,11 @@ export class CheckersPattern extends Pattern {
     this._b = colors[1];
   }
 
-  public get a() {
+  get a() {
     return this._a;
   }
 
-  public get b() {
+  get b() {
     return this._b;
   }
 

@@ -2,6 +2,7 @@ import Shape from '../geometry/shape';
 import { Point, Vector, negateVector, dot, add, multiplyScalar } from '../math/tuple';
 import Ray from './ray';
 import { EPSILON } from '../math/operations';
+import { reflectLight } from '../shading/light';
 
 export interface IntersectionComputations {
     t: number;
@@ -11,6 +12,7 @@ export interface IntersectionComputations {
     normalv: Vector;
     inside: boolean;
     overPoint: Point;
+    reflectv: Vector;
 }
 
 export default class Intersection {
@@ -40,6 +42,7 @@ export default class Intersection {
         let inside = false;
         let eyev: Vector = negateVector(r.getValues().direction);
         let normalv: Vector = i.object.normalAt(point);
+        let reflectv: Vector = reflectLight(r.direction, normalv);
         if (dot(normalv, eyev) < 0) {
             inside = true;
             normalv = negateVector(normalv);
@@ -51,7 +54,8 @@ export default class Intersection {
             eyev: eyev,
             normalv: normalv,
             inside: inside,
-            overPoint: add(point, multiplyScalar(normalv, EPSILON))
+            overPoint: add(point, multiplyScalar(normalv, EPSILON)),
+            reflectv: reflectv
         };
     }
 
