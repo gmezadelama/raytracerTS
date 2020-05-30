@@ -10,6 +10,13 @@ export interface Tuple {
     w: wRange;
 }
 
+const tuple = (x: number, y: number, z: number, w: wRange):Tuple => ({
+    x: x,
+    y: y,
+    z: z,
+    w: w
+});
+
 export const createPoint = (x: number, y: number, z: number):Tuple => tuple(x, y, z, 1);
 
 export const createVector = (x: number, y: number, z: number):Tuple => tuple(x, y, z, 0);
@@ -19,13 +26,12 @@ export const createPixelColor = (x: number, y: number, z: number):Tuple => tuple
 export type Point = Tuple;
 export type Vector = Tuple;
 export type PixelColor = Tuple;
+export const BlackColor = createPixelColor(0, 0, 0);
+export const WhiteColor = createPixelColor(1, 1, 1);
+export const RedColor = createPixelColor(1, 0, 0);
+export const GreenColor = createPixelColor(0, 1, 0);
+export const BlueColor = createPixelColor(0, 0, 1);
 
-const tuple = (x: number, y: number, z: number, w: wRange):Tuple => ({
-    x: x,
-    y: y,
-    z: z,
-    w: w
-});
 
 const singleAddition = (a: Tuple, b: Tuple):Tuple | undefined => {
     // it doesn't make sense to add two points!

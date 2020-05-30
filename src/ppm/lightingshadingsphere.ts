@@ -47,7 +47,7 @@ export function cast3DSphere(): string {
               let hitPoint: Point = r.getTPoint(hit.t);
               let normalAt: Vector = sphere.normalAt(hitPoint);
               let eye = negateVector(normalize(r.getValues().direction));
-              let sphereColor = lighting(hit.object.material, light, hitPoint, eye, normalAt);
+              let sphereColor = lighting(hit.object.material, hit.object, light, hitPoint, eye, normalAt);
               canvas.writePixel(x, y, sphereColor);
             }
         }
