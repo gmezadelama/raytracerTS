@@ -1,9 +1,13 @@
-import { createPixelColor, PixelColor, Point, matrixToTuple, subtract, add, multiplyScalar } from "../math/tuple";
+import { PixelColor, Point, matrixToTuple, subtract, add, multiplyScalar,
+         BlackColor, WhiteColor, RedColor, GreenColor, BlueColor } from "../math/tuple";
 import Matrix from "../math/matrices";
 import Shape from "../geometry/shape";
 
-export const BlackPattern = createPixelColor(0, 0, 0);
-export const WhitePattern = createPixelColor(1, 1, 1);
+export const BlackPattern = BlackColor;
+export const WhitePattern = WhiteColor;
+export const RedPattern = RedColor;
+export const GreenPattern = GreenColor
+export const BluePattern = BlueColor;
 
 export abstract class Pattern {
   private _transform:Matrix;
