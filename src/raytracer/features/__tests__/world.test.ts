@@ -1,6 +1,6 @@
 import World from '../world';
 import Light from '../../shading/light';
-import { createPoint, createPixelColor, createVector, PixelColor, Point, Vector, equalPixelColor, BlackColor } from '../../math/tuple';
+import { createPoint, createPixelColor, createVector, PixelColor, Point, Vector, equalPixelColor, BlackColor, RedColor } from '../../math/tuple';
 import Sphere from '../../geometry/sphere';
 import Shape from '../../geometry/shape';
 import Material, { glassMaterial } from '../../shading/material';
@@ -12,6 +12,7 @@ import Camera from '../camera';
 import { viewTransform } from '../view';
 import RTCanvas from '../../../ppm/rtcanvas';
 import Plane from '../../geometry/plane';
+import { TestPattern } from '../pattern';
 
 const createDefaultWorld = (): World => {
   let defaultWorld = new World();
@@ -255,5 +256,64 @@ describe('Refracted color', () => {
     let comps: IntersectionComputations = Intersection.prepareComputations(xs[1], r, xs);
     let c: PixelColor = w.refractedColor(comps, 5);
     expect(equalPixelColor(BlackColor, c));
+  });
+  test('the refracted color with a refracted ray', () => {
+    let shapeA: Shape = w.sceneObjects[0];
+    shapeA.material.ambient = 1;
+    shapeA.material.pattern = new TestPattern();
+    let shapeB: Shape = w.sceneObjects[1];
+    shapeB.material.transparency = 1;
+    shapeB.material.refractiveIndex = 1.5;
+    let r: Ray = new Ray(createPoint(0, 0, 0.1), createVector(0, 1, 0));
+    let xs: Intersection[] = Intersection.aggregateIntersections(
+      new Intersection(-0.9899, shapeA),
+      new Intersection(-0.4899, shapeB),
+      new Intersection(0.4899, shapeB),
+      new Intersection(0.9899, shapeA)
+    );
+    let comps: IntersectionComputations = Intersection.prepareComputations(xs[2], r, xs);
+    let refractedColor = w.refractedColor(comps, 5);
+    expect(equalPixelColor(refractedColor, createPixelColor(0, 0.99888, 0.04722))).toBeTruthy();
+  });
+  test('shadeHit with a transparent material', () => {
+    let floor: Plane = new Plane();
+    floor.transform = Transformations.translation(0, -1, 0);
+    floor.material.transparency = 0.5;
+    floor.material.refractiveIndex = 1.5;
+    w.addObject(floor);
+    let ball: Sphere = new Sphere();
+    ball.material.color = RedColor;
+    ball.material.ambient = 0.5;
+    ball.transform = Transformations.translation(0, -3.5, -0.5);
+    w.addObject(ball);
+    let r: Ray = new Ray(createPoint(0, 0, -3), createVector(0, -Math.SQRT2 / 2, Math.SQRT2 / 2));
+    let xs: Intersection[] = Intersection.aggregateIntersections(new Intersection(Math.SQRT2, floor));
+    let comps: IntersectionComputations = Intersection.prepareComputations(xs[0], r, xs);
+    let color: PixelColor = w.shadeHit(comps, 5);
+    expect(equalPixelColor(color, createPixelColor(0.93642, 0.68642, 0.68642)));
+  });
+});
+
+describe('Employ reflectance when combining reflection and refraction', () => {
+  test('shadeHit with a reflective, transparent material', () => {
+    let w: World = createDefaultWorld();
+    let r: Ray = new Ray(createPoint(0, 0, -3), createVector(0, -Math.SQRT2 / 2, Math.SQRT2 / 2));
+    let floor: Plane = new Plane();
+    floor.transform = Transformations.translation(0, -1, 0);
+    floor.material.reflective = 0.5;
+    floor.material.transparency = 0.5;
+    floor.material.refractiveIndex = 1.5;
+    w.addObject(floor);
+    let ball: Sphere = new Sphere();
+    ball.material.color = RedColor;
+    ball.material.ambient = 0.5;
+    ball.transform = Transformations.translation(0, -3.5, -0.5);
+    w.addObject(ball);
+    let xs: Intersection[] = Intersection.aggregateIntersections(
+      new Intersection(Math.SQRT2, floor)
+    );
+    let comps: IntersectionComputations = Intersection.prepareComputations(xs[0], r, xs);
+    let color: PixelColor = w.shadeHit(comps, 5);
+    expect(equalPixelColor(color, createPixelColor(0.93391, 0.69643, 0.69243))).toBeTruthy();
   });
 });

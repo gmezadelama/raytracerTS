@@ -145,3 +145,41 @@ describe('Intersections for calculations important to compute refraction', () =>
     expect(comps.point.z).toBeLessThan(comps.underPoint.z);
   });
 });
+
+describe('Schlick function', () => {
+  test('determine reflectance under total internal reflection', () => {
+    let shape: Shape = new Sphere();
+    shape.material = glassMaterial();
+    let r: Ray = new Ray(createPoint(0, 0, Math.SQRT2 / 2), createVector(0, 1, 0));
+    let xs: Intersection[] = Intersection.aggregateIntersections(
+      new Intersection(-Math.SQRT2 / 2, shape),
+      new Intersection(Math.SQRT2 / 2, shape)
+    );
+    let comps: IntersectionComputations = Intersection.prepareComputations(xs[1], r, xs);
+    let reflectance: number = Intersection.schlick(comps);
+    expect(equal(reflectance, 1.0)).toBeTruthy();
+  });
+  test('determine reflectance of a perpendicular ray', () => {
+    let shape: Shape = new Sphere();
+    shape.material = glassMaterial();
+    let r: Ray = new Ray(createPoint(0, 0, 0), createVector(0, 1, 0));
+    let xs: Intersection[] = Intersection.aggregateIntersections(
+      new Intersection(-1, shape),
+      new Intersection(1, shape)
+    );
+    let comps: IntersectionComputations = Intersection.prepareComputations(xs[1], r, xs);
+    let reflectance: number = Intersection.schlick(comps);
+    expect(equal(reflectance, 0.04)).toBeTruthy();
+  });
+  test('determine reflectance when n2 > n1', () => {
+    let shape: Shape = new Sphere();
+    shape.material = glassMaterial();
+    let r: Ray = new Ray(createPoint(0, 0.99, -2), createVector(0, 0, 1));
+    let xs: Intersection[] = Intersection.aggregateIntersections(
+      new Intersection(1.8589, shape)
+    );
+    let comps: IntersectionComputations = Intersection.prepareComputations(xs[0], r, xs);
+    let reflectance: number = Intersection.schlick(comps);
+    expect(equal(reflectance, 0.48873)).toBeTruthy();
+  });
+});

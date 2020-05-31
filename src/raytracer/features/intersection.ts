@@ -52,8 +52,8 @@ export default class Intersection {
             normalv = negateVector(normalv);
         }
         let containers: Shape[] = [];
-        let n1: number = 0;
-        let n2: number = 0;
+        let n1: number = 1;
+        let n2: number = 1;
         for(const isx of intersections) {
             let isHit: boolean = isx.equals(i);
             if (isHit) {
@@ -93,6 +93,30 @@ export default class Intersection {
         };
     }
 
+    // Implements the Christophe Schlick´s approximation to Fresnel´s equations
+    // return a number between 0 and 1
+    public static schlick = (comps: IntersectionComputations): number => {
+        // find the cosine of the angle between the eye and normal vectors
+        let cos = dot(comps.eyev, comps.normalv);
+        // total internal reflection can only occur if n1 > n2
+        if (comps.n1 > comps.n2) {
+            let n = comps.n1 / comps.n2;
+            let sin2T = Math.pow(n, 2) * (1.0 - Math.pow(cos, 2));
+            if (sin2T > 1) {
+                return 1.0;
+            }
+
+            // compute cosine ot t using trig identity
+            let cosT = Math.sqrt(1 - sin2T);
+            // to be used when n1 > n2
+            cos = cosT;
+        }
+
+        let r0 = Math.pow((
+            (comps.n1 - comps.n2) / (comps.n1 + comps.n2)
+        ), 2);
+        return r0 + (1 - r0) * Math.pow(1 - cos, 5);
+    }
+
     /** end Static methods */
 }
- 
