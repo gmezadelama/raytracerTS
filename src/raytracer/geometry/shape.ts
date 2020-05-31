@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid';
 import Ray from '../features/ray';
 import { Point, Vector, matrixToTuple, normalize, createPoint } from '../math/tuple';
 import Intersection from '../features/intersection';
@@ -5,12 +6,12 @@ import Matrix from '../math/matrices';
 import Material from '../shading/material';
 
 export default abstract class Shape {
-    private _id: number;
+    private _id: string;
     protected origin: Point;
     private _transform: Matrix;
     private _material: Material;
     constructor() {
-        this._id = (new Date()).getTime();
+        this._id = uuidv4();
         this._transform = Matrix.Identity();
         this._material = new Material();
         this.origin = createPoint(0, 0, 0);
@@ -37,7 +38,7 @@ export default abstract class Shape {
         return normalize(worldNormal);
     }
 
-    get id(): Number {
+    get id(): string {
         return this._id;
     }
 

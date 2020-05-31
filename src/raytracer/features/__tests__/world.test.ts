@@ -1,9 +1,9 @@
 import World from '../world';
 import Light from '../../shading/light';
-import { createPoint, createPixelColor, createVector, PixelColor, Point, Vector, equalPixelColor } from '../../math/tuple';
+import { createPoint, createPixelColor, createVector, PixelColor, Point, Vector, equalPixelColor, BlackColor } from '../../math/tuple';
 import Sphere from '../../geometry/sphere';
 import Shape from '../../geometry/shape';
-import Material from '../../shading/material';
+import Material, { glassMaterial } from '../../shading/material';
 import Transformations from '../transformations';
 import Ray from '../ray';
 import { equal } from '../../math/operations';
@@ -205,5 +205,55 @@ describe('Striking reflective and nonreflective surfaces', () => {
         color
       )
     ).toBeTruthy();
+  });
+});
+
+describe('Glassy material', () => {
+  test('a helper for producing glassy material', () => {
+    let s: Shape = new Sphere();
+    s.material = glassMaterial();
+    expect(equal(s.material.transparency, 1)).toBeTruthy();
+    expect(equal(s.material.refractiveIndex, 1.5)).toBeTruthy();
+  });
+});
+
+describe('Refracted color', () => {
+  let w: World;
+  let shape: Shape;
+  beforeEach(() => {
+    w = createDefaultWorld();
+    shape = w.sceneObjects[0];
+  });
+  test('the refracted color with an opaque surface', () => {
+    let r: Ray = new Ray(createPoint(0, 0, -5), createVector(0, 0, 1));
+    let xs: Intersection[] = Intersection.aggregateIntersections(
+                              new Intersection(4, shape),
+                              new Intersection(6, shape)
+                             );
+    let comps: IntersectionComputations = Intersection.prepareComputations(xs[0], r, xs);
+    let c: PixelColor = w.refractedColor(comps, 5);
+    expect(equalPixelColor(BlackColor, c));
+  });
+  test('the refracted color at the maximum recursive depth', () => {
+    shape.material = glassMaterial();
+    let r: Ray = new Ray(createPoint(0, 0, -5), createVector(0, 0, 1));
+    let xs: Intersection[] = Intersection.aggregateIntersections(
+                              new Intersection(4, shape),
+                              new Intersection(6, shape)
+                             );
+    let comps: IntersectionComputations = Intersection.prepareComputations(xs[0], r, xs);
+    let c: PixelColor = w.refractedColor(comps, 0);
+    expect(equalPixelColor(BlackColor, c));
+  });
+  test('the refracted color under total internal reflection', () => {
+    shape.material = glassMaterial();
+    let r: Ray = new Ray(createPoint(0, 0, Math.SQRT2 / 2), createVector(0, 1, 0));
+    let xs: Intersection[] = Intersection.aggregateIntersections(
+                              new Intersection(-Math.SQRT2 / 2, shape),
+                              new Intersection(Math.SQRT2 / 2, shape)
+                             );
+    let comps: IntersectionComputations = Intersection.prepareComputations(xs[1], r, xs);
+    let c: PixelColor = w.refractedColor(comps, 5);
+    expect(equalPixelColor(BlackColor, c));
   });
 });

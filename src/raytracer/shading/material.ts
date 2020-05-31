@@ -9,6 +9,8 @@ export default class Material {
   private _shininess: number;
   private _pattern: Pattern;
   private _reflective: number;
+  private _transparency: number;
+  private _refractiveIndex: number;
   constructor() {
     this._color = createPixelColor(1, 1, 1);
     this._ambient = 0.1;
@@ -17,6 +19,8 @@ export default class Material {
     this._shininess = 200.0;
     this._pattern = null;
     this._reflective = 0;
+    this._transparency = 0;
+    this._refractiveIndex = 1;
   }
 
   get color(): PixelColor {
@@ -78,4 +82,27 @@ export default class Material {
   set reflective(r: number) {
     this._reflective = r;
   }
+
+  get transparency(): number {
+    return this._transparency;
+  }
+
+  set transparency(t: number) {
+    this._transparency = t;
+  }
+
+  get refractiveIndex(): number {
+    return this._refractiveIndex;
+  }
+
+  set refractiveIndex(ri: number) {
+    this._refractiveIndex = ri;
+  }
+}
+
+export const glassMaterial = (): Material => {
+  let m: Material = new Material();
+  m.transparency = 1;
+  m.refractiveIndex = 1.5;
+  return m;
 }

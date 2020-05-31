@@ -2,7 +2,7 @@ import Shape from '../geometry/shape';
 import Light from '../shading/light';
 import Ray from './ray';
 import Intersection, { IntersectionComputations } from './intersection';
-import { PixelColor, createPixelColor, Point, vectorMagnitude, subtract, normalize, multiplyScalar, add } from '../math/tuple';
+import { PixelColor, createPixelColor, Point, vectorMagnitude, subtract, normalize, multiplyScalar, add, BlackColor, WhiteColor } from '../math/tuple';
 import { lighting } from '../shading/light';
 
 export default class World {
@@ -57,7 +57,7 @@ export default class World {
     // if there is no hit return black color
     if (!hit) return createPixelColor(0, 0, 0);
     // calculate color for that hit
-    let comps = Intersection.prepareComputations(hit, r);
+    let comps = Intersection.prepareComputations(hit, r, is);
     return this.shadeHit(comps, remaining);
   }
 
@@ -87,5 +87,12 @@ export default class World {
       let color: PixelColor = this.colorAt(reflectRay, remaining - 1);
       return multiplyScalar(color, comps.object.material.reflective);
     }
+  }
+
+  public refractedColor = (comps: IntersectionComputations, remaining: number = 4): PixelColor => {
+    if (comps.object.material.transparency === 0 || remaining === 0) {
+      return BlackColor;
+    }
+    return WhiteColor;
   }
 }
