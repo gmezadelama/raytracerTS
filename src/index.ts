@@ -20,6 +20,6 @@ window.onload = () => {
     // console.log('Plot: RedSphere.convertToPPM', castRayToRedSphere());
     // console.log('Plot: 3DSphere.convertToPPM', cast3DSphere());
     // console.log('Plot: firstScene.convertToPPM', exportScene());
-    // console.log('Plot: firstScene.convertToPPM', exportSceneWithPlanes());
+    // console.log('Plot: firstSceneWithPlanes.convertToPPM', exportSceneWithPlanes());
     console.log('Plot: firstSceneWithPatterns.convertToPPM', exportScene1WithPatterns());
 }

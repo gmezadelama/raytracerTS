@@ -87,11 +87,12 @@ export const exportSceneWithPlanes = (): string => {
   w.lightSource = new Light(createPoint(-10, 10, -10), createPixelColor(1, 1, 1));
   
   let camera: Camera = new Camera(100, 50, Math.PI / 3);
+  // let camera: Camera = new Camera(800, 600, Math.PI / 3);
   camera.transform = viewTransform(
     createPoint(0, 1.5, -5),
     createPoint(0, 1, 0),
     createVector(0, 1, 0)
   );
 
-  return camera.render(w).convertToPPM();   
+  return camera.render(w, true).convertToPPM();
 }

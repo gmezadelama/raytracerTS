@@ -97,7 +97,7 @@ export const exportScene1WithPatterns = (): string => {
   w.lightSource = new Light(createPoint(-10, 10, -10), createPixelColor(1, 1, 1));
   
   let camera: Camera = new Camera(100, 50, Math.PI / 3);
-  // let camera: Camera = new Camera(400, 200, Math.PI / 3);
+  // let camera: Camera = new Camera(800, 600, Math.PI / 3);
   camera.transform = viewTransform(
     createPoint(0, 1.5, -5),
     createPoint(0, 1, 0),
