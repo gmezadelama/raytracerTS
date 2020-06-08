@@ -1,8 +1,9 @@
-import { StripePattern, WhitePattern, BlackPattern, Pattern, GradientPattern, RingPattern, CheckersPattern } from "../pattern";
+import { StripePattern, WhitePattern, BlackPattern, Pattern, GradientPattern, RingPattern, CheckersPattern, TestPattern } from "../pattern";
 import Sphere from "../../geometry/sphere";
 import { equalPixelColor, createPoint, PixelColor, createPixelColor } from "../../math/tuple";
 import Shape from "../../geometry/shape";
 import Transformations from "../transformations";
+import Matrix from "../../math/matrices";
 
 describe('testing stripe pattern', () => {
   let pattern: StripePattern;
@@ -60,6 +61,39 @@ describe('testing stripe pattern', () => {
     pattern.transform = Transformations.translation(0.5, 0, 0);
     let color: PixelColor = pattern.setPatternAtShape(o, createPoint(2.5, 0, 0));
     expect(equalPixelColor(WhitePattern, color)).toBeTruthy();
+  });
+});
+
+describe('testing default pattern', () => {
+  let p: Pattern;
+  beforeEach(() => {
+    p = new TestPattern();
+  });
+  test('the default pattern transformation', () => {
+    expect(Matrix.equal(p.transform, Matrix.Identity())).toBeTruthy();
+  });
+  it('should assign a transformation', () => {
+    p.transform = Transformations.translation(1, 2, 3);
+    expect(Matrix.equal(p.transform, Transformations.translation(1, 2, 3)));
+  });
+  test('a pattern with an object transformation', () => {
+    let shape: Shape = new Sphere();
+    shape.transform = Transformations.scaling(2, 2, 2);
+    let c: PixelColor = p.setPatternAtShape(shape, createPoint(2, 3, 4));
+    expect(equalPixelColor(c, createPixelColor(1, 1.5, 2))).toBeTruthy();
+  });
+  test('a pattern with a pattern transformation', () => {
+    let shape: Shape = new Sphere();
+    p.transform = Transformations.scaling(2, 2, 2);
+    let c: PixelColor = p.setPatternAtShape(shape, createPoint(2, 3, 4));
+    expect(equalPixelColor(c, createPixelColor(1, 1.5, 2))).toBeTruthy();
+  });
+  test('a pattern with both and object an object and a pattern transformation', () => {
+    let shape: Shape = new Sphere();
+    shape.transform = Transformations.scaling(2, 2, 2);
+    p.transform = Transformations.translation(0.5, 1, 1.5);
+    let c: PixelColor = p.setPatternAtShape(shape, createPoint(2.5, 3, 3.5));
+    expect(equalPixelColor(c, createPixelColor(0.75, 0.5, 0.25)));
   });
 });
 

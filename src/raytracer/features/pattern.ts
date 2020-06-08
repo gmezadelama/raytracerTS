@@ -1,5 +1,5 @@
 import { PixelColor, Point, matrixToTuple, subtract, add, multiplyScalar,
-         BlackColor, WhiteColor, RedColor, GreenColor, BlueColor } from "../math/tuple";
+         BlackColor, WhiteColor, RedColor, GreenColor, BlueColor, createPixelColor } from "../math/tuple";
 import Matrix from "../math/matrices";
 import Shape from "../geometry/shape";
 
@@ -16,20 +16,29 @@ export abstract class Pattern {
     this._transform = Matrix.Identity();
   }
 
-  public get transform():Matrix {
+  get transform():Matrix {
     return this._transform;
   }
 
-  public set transform(t:Matrix) {
+  set transform(t:Matrix) {
     this._transform = t;
   }
 
-  public abstract setPatternAtPoint(p: Point): PixelColor;
+  public abstract setPatternAtPoint(patternPoint: Point): PixelColor;
 
   public setPatternAtShape = (s: Shape, p: Point): PixelColor => {
     let objectPoint: Point = s.localPoint(p);
     let patternPoint: Point = matrixToTuple(Matrix.multiply(Matrix.inverse(this.transform), Matrix.tupleToMatrix(objectPoint)));
     return this.setPatternAtPoint(patternPoint);
+  }
+}
+
+export class TestPattern extends Pattern {
+  constructor() {
+    super();
+  }
+  public setPatternAtPoint = (patternPoint: Point): PixelColor => {
+    return createPixelColor(patternPoint.x, patternPoint.y, patternPoint.z);
   }
 }
 
@@ -43,16 +52,16 @@ export class StripePattern extends Pattern {
     this._b = colors[1];
   }
 
-  public get a() {
+  get a() {
     return this._a;
   }
 
-  public get b() {
+  get b() {
     return this._b;
   }
 
-  public setPatternAtPoint = (p: Point): PixelColor => {    
-    return Math.floor(p.x) % 2 === 0 ? this._a : this._b;
+  public setPatternAtPoint = (patternPoint: Point): PixelColor => {
+    return Math.floor(patternPoint.x) % 2 === 0 ? this._a : this._b;
   }
 }
 
@@ -66,17 +75,17 @@ export class GradientPattern extends Pattern {
     this._b = colors[1];
   }
 
-  public get a() {
+  get a() {
     return this._a;
   }
 
-  public get b() {
+  get b() {
     return this._b;
   }
 
-  public setPatternAtPoint = (p: Point): PixelColor => {
+  public setPatternAtPoint = (patternPoint: Point): PixelColor => {
     let colorDistance: PixelColor = subtract(this._b, this._a);
-    let fraction: number = p.x - Math.floor(p.x);
+    let fraction: number = patternPoint.x - Math.floor(patternPoint.x);
     return add(this._a, multiplyScalar(colorDistance, fraction));
   }
 }
@@ -91,16 +100,16 @@ export class RingPattern extends Pattern {
     this._b = colors[1];
   }
 
-  public get a() {
+  get a() {
     return this._a;
   }
 
-  public get b() {
+  get b() {
     return this._b;
   }
 
-  public setPatternAtPoint = (p: Point): PixelColor => {
-    if (Math.floor(Math.sqrt(p.x * p.x + p.z * p.z)) % 2 === 0) {
+  public setPatternAtPoint = (patternPoint: Point): PixelColor => {
+    if (Math.floor(Math.sqrt(patternPoint.x * patternPoint.x + patternPoint.z * patternPoint.z)) % 2 === 0) {
       return this._a;
     } else {
       return this._b;
@@ -118,16 +127,16 @@ export class CheckersPattern extends Pattern {
     this._b = colors[1];
   }
 
-  public get a() {
+  get a() {
     return this._a;
   }
 
-  public get b() {
+  get b() {
     return this._b;
   }
 
-  public setPatternAtPoint = (p: Point): PixelColor => {
-    if ((Math.floor(p.x) + Math.floor(p.y) + Math.floor(p.z)) % 2 === 0) {
+  public setPatternAtPoint = (patternPoint: Point): PixelColor => {
+    if ((Math.floor(patternPoint.x) + Math.floor(patternPoint.y) + Math.floor(patternPoint.z)) % 2 === 0) {
       return this._a;
     } else {
       return this._b;

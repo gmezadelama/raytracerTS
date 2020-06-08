@@ -61,15 +61,31 @@ export default class Camera {
     return new Ray(origin, direction);
   }
 
-  public render = (w: World): RTCanvas => {
+  public render = (w: World, withMessages: boolean = false): RTCanvas => {
+    const print = (msg: string, value: any = '') => {
+      if (withMessages) {
+        console.log(msg, value);
+      }
+    };
     let image: RTCanvas = new RTCanvas(this._hSize, this._vSize);
+    let totalPixels: number = this._vSize * this._hSize;
+    let pctInc: number = 0.05;
+    let nextPrint: number = 0.05;
+    let pixelCount: number = 0;
+    print('Starting rendering calculation...');
     for (let y = 0; y < this._vSize - 1; y++) {
       for (let x = 0; x < this._hSize - 1; x++) {
         let ray: Ray = this.rayForPixel(x, y);
         let color: PixelColor = w.colorAt(ray);
         image.writePixel(x, y, color);
+        pixelCount++;
+        if ((pixelCount / totalPixels) > nextPrint) {
+          print(`${Math.round((nextPrint) * 100)}% completed...`);
+          nextPrint += pctInc;
+        }
       }
     }
+    print('Rendering calculation completed!');
     return image;
   }
   

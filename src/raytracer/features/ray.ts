@@ -6,9 +6,9 @@ export default class Ray {
     private _origin: Point;
     private _direction: Vector;
 
-    constructor(o: Point, d: Vector) {
-        this._origin = o;
-        this._direction = d;
+    constructor(origin: Point, direction: Vector) {
+        this._origin = origin;
+        this._direction = direction;
     }
 
     getValues = (): {origin: Point, direction: Vector} => {

@@ -6,6 +6,7 @@ import './sass/styles.scss';
 import { exportScene } from './ppm/firstScene';
 import { exportSceneWithPlanes } from './ppm/firstSceneWithPlanes';
 import { exportScene1WithPatterns } from './ppm/scene1WithPatterns';
+import { exportSceneWithGlasses } from './ppm/sceneWithGlasses';
 
 let canvas;
 
@@ -20,6 +21,7 @@ window.onload = () => {
     // console.log('Plot: RedSphere.convertToPPM', castRayToRedSphere());
     // console.log('Plot: 3DSphere.convertToPPM', cast3DSphere());
     // console.log('Plot: firstScene.convertToPPM', exportScene());
-    // console.log('Plot: firstScene.convertToPPM', exportSceneWithPlanes());
-    console.log('Plot: firstSceneWithPatterns.convertToPPM', exportScene1WithPatterns());
+    // console.log('Plot: firstSceneWithPlanes.convertToPPM', exportSceneWithPlanes());
+    // console.log('Plot: firstSceneWithPatterns.convertToPPM', exportScene1WithPatterns());
+    console.log('Plot: sceneWithGlasses.convertToPPM', exportSceneWithGlasses());
 }
